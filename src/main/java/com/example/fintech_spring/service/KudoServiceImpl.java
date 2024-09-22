@@ -6,7 +6,6 @@ import com.example.fintech_spring.dto.Category;
 import com.example.fintech_spring.dto.Location;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.ParameterizedTypeReference;
@@ -32,21 +31,22 @@ public class KudoServiceImpl implements KudoService {
 
 
     @EventListener(ApplicationReadyEvent.class)
-    private void fetchingStorages() {
+    private void fetchingRepositories() {
         log.info("Application starting, fetching categories...");
-        getCategories();
+        fetchingCategories();
 
         log.info("Fetching locations...");
-        getLocations();
+        fetchingLocations();
     }
 
     @Override
-    public void getCategories() {
+    public void fetchingCategories() {
         try {
             ResponseEntity<List<Category>> rateResponse =
                     restTemplate.exchange("/place-categories",
                             HttpMethod.GET, null, new ParameterizedTypeReference<>() {
                             });
+
             rateResponse.getBody()
                     .forEach(category -> dbCategory.save(category.getId(), category));
             log.info("Successfully fetched and stored {} categories.", dbCategory.getTotalCount());
@@ -56,7 +56,7 @@ public class KudoServiceImpl implements KudoService {
     }
 
     @Override
-    public void getLocations() {
+    public void fetchingLocations() {
         try {
             ResponseEntity<List<Location>> rateResponse =
                     restTemplate.exchange("/locations",
