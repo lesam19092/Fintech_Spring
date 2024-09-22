@@ -2,7 +2,7 @@ package com.example.fintech_spring.controllers;
 
 //TODO(REFACTOR)
 
-import com.example.fintech_spring.data_source.SimpleStorage;
+import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Category;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,17 +15,17 @@ import java.util.List;
 public class CategoriesController {
 
 
-    private final SimpleStorage<Integer, Category> dbCategory;
+    private final Repository<Integer, Category> dbCategory;
 
 
-    public CategoriesController(SimpleStorage<Integer, Category> dbCategory) {
+    public CategoriesController(Repository<Integer, Category> dbCategory) {
         this.dbCategory = dbCategory;
     }
 
     @GetMapping(value = "/api/v1/places/categories")
     public ResponseEntity<List<Category>> getAllCategories() {
 
-        List<Category> categories = dbCategory.getList();
+        List<Category> categories = dbCategory.getAllValues();
         return categories != null && !categories.isEmpty()
                 ? new ResponseEntity<>(categories, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -46,7 +46,7 @@ public class CategoriesController {
 
     @PostMapping(value = "/api/v1/places/categories")
     public ResponseEntity<Category> createGategory(@RequestBody Category category) {
-        dbCategory.put(category.getId(), category);
+        dbCategory.save(category.getId(), category);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
