@@ -50,13 +50,8 @@ public class RepositoryImpl<K, V> implements Repository<K, V> {
 
     @Override
     public boolean update(K k, V v) {
-        if (storage.containsKey(k)) {
-            storage.put(k, v);
-            return true;
-        } else {
-            storage.put(k, v);
-            return true;
-        }
+        storage.put(k, v);
+        return true;
     }
 
     @Override
