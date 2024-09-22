@@ -20,24 +20,24 @@ public class RepositoryImpl<K, V> implements Repository<K, V> {
     }
 
     @Override
-    public V get(K key) {
+    public V findById(K key) {
         return storage.get(key);
     }
 
     @Override
-    public boolean remove(K key) {
+    public boolean deleteById(K key) {
         return storage.remove(key) != null;
 
     }
 
     @Override
-    public boolean contains(K key) {
+    public boolean existsById(K key) {
         return storage.containsKey(key);
     }
 
 
     @Override
-    public List<V> getAllValues() {
+    public List<V> findAll() {
         return new ArrayList<>(storage.values());
     }
 

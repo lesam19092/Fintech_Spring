@@ -25,7 +25,7 @@ public class CategoriesController {
     @GetMapping(value = "/api/v1/places/categories")
     public ResponseEntity<List<Category>> getAllCategories() {
 
-        List<Category> categories = dbCategory.getAllValues();
+        List<Category> categories = dbCategory.findAll();
         return categories != null && !categories.isEmpty()
                 ? new ResponseEntity<>(categories, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -35,7 +35,7 @@ public class CategoriesController {
 
     @GetMapping(value = "/api/v1/places/categories/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable(name = "id") Integer id) {
-        Category category = dbCategory.get(id);
+        Category category = dbCategory.findById(id);
         return category != null
                 ? new ResponseEntity<>(category, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -64,7 +64,7 @@ public class CategoriesController {
     public ResponseEntity<?> updateCategory(@PathVariable(name = "id") Integer id) {
 
 
-        boolean deleted = dbCategory.remove(id);
+        boolean deleted = dbCategory.deleteById(id);
 
         return deleted
                 ? new ResponseEntity<>(HttpStatus.OK)

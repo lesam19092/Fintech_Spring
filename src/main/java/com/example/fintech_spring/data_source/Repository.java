@@ -7,13 +7,13 @@ public interface Repository<K, V> {
 
     void save(K key, V value);
 
-    V get(K key);
+    V findById(K key);
 
-    boolean remove(K key);
+    boolean deleteById(K key);
 
-    boolean contains(K key);
+    boolean existsById(K key);
 
-    List<V> getAllValues();
+    List<V> findAll();
 
     void soutData(); //TODO ( КАК БУДУ ЗАЛИВАТЬ УБРАТЬ)
 

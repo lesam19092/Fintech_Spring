@@ -3,7 +3,6 @@ package com.example.fintech_spring.controllers;
 //TODO(REFACTOR)
 
 import com.example.fintech_spring.data_source.Repository;
-import com.example.fintech_spring.dto.Category;
 import com.example.fintech_spring.dto.Location;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class LocationsController {
     @GetMapping(value = "/api/v1/locations")
     public ResponseEntity<List<Location>> getAllLocations() {
 
-        List<Location> locations = dbLocation.getAllValues();
+        List<Location> locations = dbLocation.findAll();
         return locations != null && !locations.isEmpty()
                 ? new ResponseEntity<>(locations, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -36,7 +35,7 @@ public class LocationsController {
 
     @GetMapping(value = "/api/v1/locations/{id}")
     public ResponseEntity<Location> getCategoryById(@PathVariable(name = "id") UUID id) {
-        Location location = dbLocation.get(id);
+        Location location = dbLocation.findById(id);
         return location != null
                 ? new ResponseEntity<>(location, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -66,7 +65,7 @@ public class LocationsController {
     public ResponseEntity<?> updateCategory(@PathVariable(name = "id") UUID id) {
 
 
-        boolean deleted = dbLocation.remove(id);
+        boolean deleted = dbLocation.deleteById(id);
 
         return deleted
                 ? new ResponseEntity<>(HttpStatus.OK)
