@@ -1,0 +1,11 @@
+app:
+  baseUrl: "https://kudago.com/public-api/v1.4"
+spring:
+  application:
+    name: Fintech_Spring
+
+
+
+server:
+  port: 8080
+
