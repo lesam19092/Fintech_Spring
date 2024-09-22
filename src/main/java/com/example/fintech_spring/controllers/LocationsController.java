@@ -4,6 +4,7 @@ package com.example.fintech_spring.controllers;
 
 import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Location;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +14,12 @@ import java.util.UUID;
 
 
 @RestController
+@RequiredArgsConstructor
+
 public class LocationsController {
 
     private final Repository<UUID, Location> dbLocation;
 
-
-    public LocationsController(Repository<UUID, Location> dbLocation) {
-        this.dbLocation = dbLocation;
-    }
 
     @GetMapping(value = "/api/v1/locations")
     public ResponseEntity<List<Location>> getAllLocations() {

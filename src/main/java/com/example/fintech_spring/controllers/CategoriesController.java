@@ -4,6 +4,7 @@ package com.example.fintech_spring.controllers;
 
 import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Category;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,15 +13,11 @@ import java.util.List;
 
 
 @RestController
+@RequiredArgsConstructor
 public class CategoriesController {
 
 
     private final Repository<Integer, Category> dbCategory;
-
-
-    public CategoriesController(Repository<Integer, Category> dbCategory) {
-        this.dbCategory = dbCategory;
-    }
 
     @GetMapping(value = "/api/v1/places/categories")
     public ResponseEntity<List<Category>> getAllCategories() {

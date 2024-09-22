@@ -4,6 +4,7 @@ package com.example.fintech_spring.service;
 import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Category;
 import com.example.fintech_spring.dto.Location;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class KudoServiceImpl implements KudoService {
 
 
@@ -27,14 +29,6 @@ public class KudoServiceImpl implements KudoService {
     private final Repository<UUID, Location> dbLocation;
 
     private final RestTemplate restTemplate;
-
-
-    @Autowired
-    public KudoServiceImpl(Repository<Integer, Category> dbCategory, Repository<UUID, Location> dbLocation, RestTemplate restTemplate) {
-        this.dbCategory = dbCategory;
-        this.dbLocation = dbLocation;
-        this.restTemplate = restTemplate;
-    }
 
 
     @EventListener(ApplicationReadyEvent.class)
