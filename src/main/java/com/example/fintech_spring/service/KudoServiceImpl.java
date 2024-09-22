@@ -1,7 +1,7 @@
 package com.example.fintech_spring.service;
 
 
-import com.example.fintech_spring.data_source.SimpleStorage;
+import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Category;
 import com.example.fintech_spring.dto.Location;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,78 +22,66 @@ import java.util.UUID;
 public class KudoServiceImpl implements KudoService {
 
 
-    private final SimpleStorage<Integer, Category> dbCategory;
+    private final Repository<Integer, Category> dbCategory;
 
-    private final SimpleStorage<UUID, Location> dbLocation;
+    private final Repository<UUID, Location> dbLocation;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
 
     @Autowired
-    public KudoServiceImpl(SimpleStorage<Integer, Category> dbCategory, SimpleStorage<UUID, Location> dbLocation) {
+    public KudoServiceImpl(Repository<Integer, Category> dbCategory, Repository<UUID, Location> dbLocation, RestTemplate restTemplate) {
         this.dbCategory = dbCategory;
         this.dbLocation = dbLocation;
+        this.restTemplate = restTemplate;
+    }
+
+
+    @EventListener(ApplicationReadyEvent.class)
+    private void fetchingStorages() {
+        log.info("Application starting, fetching categories...");
+        getCategories();
+
+        log.info("Fetching locations...");
+        getLocations();
     }
 
     @Override
-    @Order(1)
-    @EventListener(ApplicationReadyEvent.class)
     public void getCategories() {
-//TODO (спрятать ссылки в application yaml)
-
-        String baseUrl =
-                "https://kudago.com/public-api/v1.4/place-categories";
-
         try {
             ResponseEntity<List<Category>> rateResponse =
-                    restTemplate.exchange(baseUrl,
+                    restTemplate.exchange("/place-categories",
                             HttpMethod.GET, null, new ParameterizedTypeReference<>() {
                             });
-            List<Category> categories = rateResponse.getBody();
-
-            categories
-                    .forEach(category -> dbCategory.put(category.getId(), category));
-
-            System.out.println(dbCategory.getStorage().size());
-        } catch (NullPointerException ex) {
-            log.info(ex.getMessage());
+            rateResponse.getBody()
+                    .forEach(category -> dbCategory.save(category.getId(), category));
+            log.info("Successfully fetched and stored {} categories.", dbCategory.getTotalCount());
+        } catch (Exception ex) {
+            log.error("Error fetching categories:", ex);
         }
-
-
     }
 
     @Override
-    @Order(2)
-
-    @EventListener(ApplicationReadyEvent.class)
     public void getLocations() {
-        log.info("я выполни подгрузку локаций");
-
-
-        String baseUrl =
-                "https://kudago.com/public-api/v1.4/locations";
-
         try {
-
-
             ResponseEntity<List<Location>> rateResponse =
-                    restTemplate.exchange(baseUrl,
+                    restTemplate.exchange("/locations",
                             HttpMethod.GET, null, new ParameterizedTypeReference<>() {
                             });
-            List<Location> locations = rateResponse.getBody();
 
 
-            locations
-                    .forEach(category -> dbLocation.put(UUID.randomUUID(), category));
-            System.out.println(dbLocation.getStorage().size());
-        } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
+            rateResponse.getBody()
+                    .forEach(location -> {
+                        location.setUuid(UUID.randomUUID());
+                        dbLocation.save(location.getUuid(), location);
+                    });
+            log.info("Successfully fetched and stored {} locations.", dbLocation.getTotalCount());
+        } catch (Exception ex) {
+            log.error("Error fetching categories:", ex);
         }
-
     }
 }
 
-//TODO(REFACTOR)
 
 
 
