@@ -7,12 +7,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Component
 public class SimpleStorageImpl<K, V> implements SimpleStorage<K, V> {
 
-    private final Map<K, V> storage = new HashMap<>();
+    private final Map<K, V> storage = new ConcurrentHashMap<>();
 
     @Override
     public void put(K key, V value) {

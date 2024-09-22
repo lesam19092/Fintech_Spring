@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -23,21 +25,22 @@ public class KudoServiceImpl implements KudoService {
 
     private final SimpleStorage<Integer, Category> dbCategory;
 
-    private final SimpleStorage<String, Location> dbLocation;
+    private final SimpleStorage<UUID, Location> dbLocation;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
 
     @Autowired
-    public KudoServiceImpl(SimpleStorage<Integer, Category> dbCategory, SimpleStorage<String, Location> dbLocation) {
+    public KudoServiceImpl(SimpleStorage<Integer, Category> dbCategory, SimpleStorage<UUID, Location> dbLocation) {
         this.dbCategory = dbCategory;
         this.dbLocation = dbLocation;
     }
 
     @Override
+    @Order(1)
     @EventListener(ApplicationReadyEvent.class)
     public void getCategories() {
-//TODO (СДЕЛАТЬ ТАК , ЧТОБЫ ССЫЛКИ МОЖНО БЫЛО ПОЛУЧИТЬ ЧЕРЕЗ АПЛИКАТИОН ЯМЛ
+//TODO (спрятать ссылки в application yaml)
 
         String baseUrl =
                 "https://kudago.com/public-api/v1.4/place-categories";
@@ -49,8 +52,10 @@ public class KudoServiceImpl implements KudoService {
                             });
             List<Category> categories = rateResponse.getBody();
 
-            categories.stream()
+            categories
                     .forEach(category -> dbCategory.put(category.getId(), category));
+
+            System.out.println(dbCategory.getStorage().size());
         } catch (NullPointerException ex) {
             log.info(ex.getMessage());
         }
@@ -59,6 +64,8 @@ public class KudoServiceImpl implements KudoService {
     }
 
     @Override
+    @Order(2)
+
     @EventListener(ApplicationReadyEvent.class)
     public void getLocations() {
         log.info("я выполни подгрузку локаций");
@@ -67,17 +74,21 @@ public class KudoServiceImpl implements KudoService {
         String baseUrl =
                 "https://kudago.com/public-api/v1.4/locations";
 
-        ResponseEntity<List<Location>> rateResponse =
-                restTemplate.exchange(baseUrl,
-                        HttpMethod.GET, null, new ParameterizedTypeReference<>() {
-                        });
-        List<Location> locations = rateResponse.getBody();
+        try {
 
 
-        int id = 0;
-        for (Location location : locations) {
-            System.out.println(id + " " + location.toString());
-            id++;
+            ResponseEntity<List<Location>> rateResponse =
+                    restTemplate.exchange(baseUrl,
+                            HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+                            });
+            List<Location> locations = rateResponse.getBody();
+
+
+            locations
+                    .forEach(category -> dbLocation.put(UUID.randomUUID(), category));
+            System.out.println(dbLocation.getStorage().size());
+        } catch (NullPointerException e) {
+            System.out.println(e.getMessage());
         }
 
     }
