@@ -23,9 +23,9 @@ import java.util.UUID;
 public class KudoServiceImpl implements KudoService {
 
 
-    private final Repository<Integer, Category> dbCategory;
+    private final Repository<Integer, Category> categoryRepository;
 
-    private final Repository<UUID, Location> dbLocation;
+    private final Repository<UUID, Location> locationRepository;
 
     private final RestTemplate restTemplate;
 
@@ -44,12 +44,11 @@ public class KudoServiceImpl implements KudoService {
         try {
             ResponseEntity<List<Category>> rateResponse =
                     restTemplate.exchange("/place-categories",
-                            HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+                            HttpMethod.GET, null, new ParameterizedTypeReference<List<Category>>() {
                             });
-
             rateResponse.getBody()
-                    .forEach(category -> dbCategory.save(category.getId(), category));
-            log.info("Successfully fetched and stored {} categories.", dbCategory.getTotalCount());
+                    .forEach(category -> categoryRepository.save(category.getId(), category));
+            log.info("Successfully fetched and stored {} categories.", categoryRepository.getTotalCount());
         } catch (Exception ex) {
             log.error("Error fetching categories:", ex);
         }
@@ -62,19 +61,19 @@ public class KudoServiceImpl implements KudoService {
                     restTemplate.exchange("/locations",
                             HttpMethod.GET, null, new ParameterizedTypeReference<>() {
                             });
-
-
             rateResponse.getBody()
                     .forEach(location -> {
                         location.setUuid(UUID.randomUUID());
-                        dbLocation.save(location.getUuid(), location);
+                        locationRepository.save(location.getUuid(), location);
                     });
-            log.info("Successfully fetched and stored {} locations.", dbLocation.getTotalCount());
+            log.info("Successfully fetched and stored {} locations.", locationRepository.getTotalCount());
         } catch (Exception ex) {
             log.error("Error fetching categories:", ex);
         }
     }
 }
+
+//TODO 4) НАПИСАТЬ АСПЕКТЫ
 
 
 
