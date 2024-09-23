@@ -18,59 +18,41 @@ import java.util.UUID;
 
 public class LocationsController {
 
-    private final Repository<UUID, Location> dbLocation;
+    private final Repository<UUID, Location> locationRepository;
 
 
     @GetMapping(value = "/api/v1/locations")
     public ResponseEntity<List<Location>> getAllLocations() {
-
-        List<Location> locations = dbLocation.findAll();
-        return locations != null && !locations.isEmpty()
-                ? new ResponseEntity<>(locations, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
+        List<Location> locations = locationRepository.findAll();
+        return new ResponseEntity<>(locations, HttpStatus.OK);
     }
 
 
     @GetMapping(value = "/api/v1/locations/{id}")
-    public ResponseEntity<Location> getCategoryById(@PathVariable(name = "id") UUID id) {
-        Location location = dbLocation.findById(id);
-        return location != null
-                ? new ResponseEntity<>(location, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-
+    public ResponseEntity<Location> getLocationById(@PathVariable UUID id) {
+        Location location = locationRepository.findById(id);
+        return new ResponseEntity<>(location, HttpStatus.OK);
     }
 
 
     @PostMapping(value = "/api/v1/locations")
     public ResponseEntity<Location> createGategory(@RequestBody Location location) {
-        dbLocation.save(location.getUuid(), location);
+        locationRepository.save(location.getUuid(), location);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
     @PutMapping(value = "/api/v1/locations/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable(name = "id") UUID id, @RequestBody Location location) {
+    public ResponseEntity<?> updateCategory(@PathVariable UUID id, @RequestBody Location location) {
 
-        boolean updated = dbLocation.update(id, location);
-
-        return updated
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        boolean updated = locationRepository.update(id, location);
+        return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/api/v1/locations/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable(name = "id") UUID id) {
-
-
-        boolean deleted = dbLocation.deleteById(id);
-
-        return deleted
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    public ResponseEntity<?> updateCategory(@PathVariable UUID id) {
+        boolean deleted = locationRepository.deleteById(id);
+        return new ResponseEntity<>(deleted, HttpStatus.OK);
     }
-
-
 }
 

@@ -15,13 +15,13 @@ import java.util.UUID;
 public class RepositoryConfiguration {
 
     @Bean
-    public Repository<Integer, Category> dbCategory() {
+    public Repository<Integer, Category> categoryRepository() {
         log.info("Initializing dbCategory repository");
         return new RepositoryImpl<>();
     }
 
     @Bean
-    public Repository<UUID, Location> dbLocation() {
+    public Repository<UUID, Location> locationRepository() {
         log.info("Initializing dbLocation repository");
         return new RepositoryImpl<>();
     }
