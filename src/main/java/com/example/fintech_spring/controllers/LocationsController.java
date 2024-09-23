@@ -15,7 +15,6 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-
 public class LocationsController {
 
     private final Repository<UUID, Location> locationRepository;
@@ -36,21 +35,21 @@ public class LocationsController {
 
 
     @PostMapping(value = "/api/v1/locations")
-    public ResponseEntity<Location> createGategory(@RequestBody Location location) {
+    public ResponseEntity<Location> createLocation(@RequestBody Location location) {
         locationRepository.save(location.getUuid(), location);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
     @PutMapping(value = "/api/v1/locations/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable UUID id, @RequestBody Location location) {
+    public ResponseEntity<?> updateLocation(@PathVariable UUID id, @RequestBody Location location) {
 
         boolean updated = locationRepository.update(id, location);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/api/v1/locations/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable UUID id) {
+    public ResponseEntity<?> deleteLocation(@PathVariable UUID id) {
         boolean deleted = locationRepository.deleteById(id);
         return new ResponseEntity<>(deleted, HttpStatus.OK);
     }

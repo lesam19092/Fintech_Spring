@@ -15,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j //todo мб убрать , а мб все залогироовать
 public class CategoriesController {
 
 
