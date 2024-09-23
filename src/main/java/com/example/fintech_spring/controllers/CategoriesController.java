@@ -1,11 +1,9 @@
 package com.example.fintech_spring.controllers;
 
-//TODO(REFACTOR)
 
 import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Category;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
