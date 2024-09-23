@@ -1,6 +1,5 @@
 package com.example.fintech_spring.controllers;
 
-//TODO(REFACTOR)
 
 import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Location;
