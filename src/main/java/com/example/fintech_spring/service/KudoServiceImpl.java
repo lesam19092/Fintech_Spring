@@ -73,8 +73,6 @@ public class KudoServiceImpl implements KudoService {
     }
 }
 
-//TODO 4) НАПИСАТЬ АСПЕКТЫ
-
 
 
 
