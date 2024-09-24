@@ -1,6 +1,7 @@
 package com.example.fintech_spring.controllers;
 
 
+import com.example.fintech_spring.aspect.LogExecutionTime;
 import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Location;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,8 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@LogExecutionTime
+
 public class LocationsController {
 
     private final Repository<UUID, Location> locationRepository;
