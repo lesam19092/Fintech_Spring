@@ -15,8 +15,6 @@ public interface Repository<K, V> {
 
     List<V> findAll();
 
-    void soutData(); //TODO ( КАК БУДУ ЗАЛИВАТЬ УБРАТЬ)
-
     boolean update(K k, V v);
 
     int getTotalCount();

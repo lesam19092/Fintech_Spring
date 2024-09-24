@@ -41,12 +41,6 @@ public class RepositoryImpl<K, V> implements Repository<K, V> {
         return new ArrayList<>(storage.values());
     }
 
-    @Override
-    public void soutData() {
-        storage.forEach((k, v) -> {
-            System.out.printf("Key: %s, Value: %s%n", k, v);
-        });
-    }
 
     @Override
     public boolean update(K k, V v) {
