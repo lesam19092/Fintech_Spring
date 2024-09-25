@@ -15,39 +15,40 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @LogExecutionTime
+@RequestMapping("/api/v1/places")
 public class CategoriesController {
 
 
     private final Repository<Integer, Category> categoryRepository;
 
-    @GetMapping("/api/v1/places/categories")
+    @GetMapping("/categories")
     public ResponseEntity<List<Category>> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
 
-    @GetMapping("/api/v1/places/categories/{id}")
+    @GetMapping("/categories/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable Integer id) {
         Category category = categoryRepository.findById(id);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
 
-    @PostMapping("/api/v1/places/categories")
+    @PostMapping("/categories")
     public ResponseEntity<Category> createGategory(@RequestBody Category category) {
         categoryRepository.save(category.getId(), category);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/api/v1/places/categories/{id}")
+    @PutMapping("/categories/{id}")
     public ResponseEntity<Boolean> updateCategory(@PathVariable Integer id, @RequestBody Category category) {
         boolean updated = categoryRepository.update(id, category);
         return new ResponseEntity<>(updated, HttpStatus.OK);
 
     }
 
-    @DeleteMapping(value = "/api/v1/places/categories/{id}")
+    @DeleteMapping(value = "/categories/{id}")
     public ResponseEntity<Boolean> deleteCategory(@PathVariable Integer id) {
         boolean deleted = categoryRepository.deleteById(id);
         return new ResponseEntity<>(deleted, HttpStatus.OK);
