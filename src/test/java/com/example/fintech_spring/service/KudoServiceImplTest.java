@@ -44,7 +44,7 @@ class KudoServiceImplTest {
 
     @Test
     void fetchingLocations() {
-        ResponseEntity<List<Location>> response = restTemplate.exchange("https://kudago.com/public-api/v1.4//locations", HttpMethod.GET, null,
+        ResponseEntity<List<Location>> response = restTemplate.exchange("https://kudago.com/public-api/v1.4/locations", HttpMethod.GET, null,
                 new ParameterizedTypeReference<>() {
                 });
 
