@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
+
 @Component
 @Aspect
 @Slf4j
@@ -19,16 +20,14 @@ public class LogExecutionTimeAspect {
         Object proceed = joinPoint.proceed();
         long executionTime = System.currentTimeMillis() - initTime;
 
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        String methodName = signature.getMethod().getName();
-        String className = signature.getDeclaringTypeName();
 
-        log.info("============================================================================================================");
-        log.info("Class: {}, Method: {}", className, methodName);
-        log.info("Method executed in: {} ms", executionTime);
-        log.info("============================================================================================================");
+        if (joinPoint.getSignature() instanceof MethodSignature signature) {
+            String methodName = signature.getMethod().getName();
+            String className = signature.getDeclaringTypeName();
+
+            log.trace("Class: {}, Method: {} ,Method executed in: {} ms ", className, methodName, executionTime);
+        }
         return proceed;
     }
-
 }
 
