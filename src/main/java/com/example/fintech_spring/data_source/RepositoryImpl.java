@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -20,8 +21,8 @@ public class RepositoryImpl<K, V> implements Repository<K, V> {
     }
 
     @Override
-    public V findById(K key) {
-        return storage.get(key);
+    public Optional<V> findById(K key) {
+        return Optional.ofNullable(storage.get(key));
     }
 
     @Override
@@ -43,9 +44,8 @@ public class RepositoryImpl<K, V> implements Repository<K, V> {
 
 
     @Override
-    public boolean update(K k, V v) {
+    public void update(K k, V v) {
         storage.put(k, v);
-        return true;
     }
 
     @Override

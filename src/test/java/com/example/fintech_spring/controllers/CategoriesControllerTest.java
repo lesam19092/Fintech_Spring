@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -54,7 +55,7 @@ class CategoriesControllerTest {
         String expectedJson = mapper
                 .writeValueAsString(new Category(1, "slug1", "name1"));
 
-        when(categoryRepository.findById(1)).thenReturn(category);
+        when(categoryRepository.findById(1)).thenReturn(Optional.of(category));
 
         mockMvc.perform(get("/api/v1/places/categories/{id}", 1))
                 .andExpect(status().isOk())
@@ -78,11 +79,6 @@ class CategoriesControllerTest {
 
     @Test
     void updateCategory() throws Exception {
-
-        Category category = new Category(2, "slug1", "name1");
-
-        when(categoryRepository.update(1, category)).thenReturn(true);
-
         String expectedJson = mapper.writeValueAsString(new Category(1, "slug1", "name1"));
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/api/v1/places/categories/{id}", 1)

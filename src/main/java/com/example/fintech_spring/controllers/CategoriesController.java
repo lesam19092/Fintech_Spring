@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -29,8 +30,8 @@ public class CategoriesController {
 
 
     @GetMapping("/categories/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Integer id) {
-        Category category = categoryRepository.findById(id);
+    public ResponseEntity<Optional<Category>> getCategoryById(@PathVariable Integer id) {
+        Optional<Category> category = categoryRepository.findById(id);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
@@ -43,8 +44,7 @@ public class CategoriesController {
 
     @PutMapping("/categories/{id}")
     public ResponseEntity<Boolean> updateCategory(@PathVariable Integer id, @RequestBody Category category) {
-        boolean updated = categoryRepository.update(id, category);
-        return new ResponseEntity<>(updated, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 

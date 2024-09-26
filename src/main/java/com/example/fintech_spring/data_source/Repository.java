@@ -2,12 +2,13 @@ package com.example.fintech_spring.data_source;
 
 
 import java.util.List;
+import java.util.Optional;
 
 public interface Repository<K, V> {
 
     void save(K key, V value);
 
-    V findById(K key);
+    Optional<V> findById(K key);
 
     boolean deleteById(K key);
 
@@ -15,7 +16,7 @@ public interface Repository<K, V> {
 
     List<V> findAll();
 
-    boolean update(K k, V v);
+    void update(K k, V v);
 
     int getTotalCount();
 }

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -30,8 +31,8 @@ public class LocationsController {
 
 
     @GetMapping(value = "/locations/{id}")
-    public ResponseEntity<Location> getLocationById(@PathVariable UUID id) {
-        Location location = locationRepository.findById(id);
+    public ResponseEntity<Optional<Location>> getLocationById(@PathVariable UUID id) {
+        Optional<Location> location = locationRepository.findById(id);
         return new ResponseEntity<>(location, HttpStatus.OK);
     }
 
@@ -45,9 +46,7 @@ public class LocationsController {
 
     @PutMapping(value = "/locations/{id}")
     public ResponseEntity<?> updateLocation(@PathVariable UUID id, @RequestBody Location location) {
-
-        boolean updated = locationRepository.update(id, location);
-        return new ResponseEntity<>(updated, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/locations/{id}")

@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
@@ -63,7 +64,7 @@ class LocationsControllerTest {
         String expectedJson = mapper
                 .writeValueAsString(new Location(id, "slug1", "name1"));
 
-        when(locationRepository.findById(id)).thenReturn(location);
+        when(locationRepository.findById(id)).thenReturn(Optional.of(location));
 
         mockMvc.perform(get("/api/v1/locations/{id}", id))
                 .andExpect(status().isOk())
@@ -91,9 +92,6 @@ class LocationsControllerTest {
     void updateLocation() throws Exception {
 
         var id = UUID.randomUUID();
-        Location location = new Location(id, "slug1", "name1");
-
-        when(locationRepository.update(id, location)).thenReturn(true);
 
         String expectedJson = mapper.writeValueAsString(new Location(id, "slug1", "name1"));
         mockMvc.perform(MockMvcRequestBuilders
