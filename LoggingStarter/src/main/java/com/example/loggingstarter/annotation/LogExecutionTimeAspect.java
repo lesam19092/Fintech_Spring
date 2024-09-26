@@ -1,5 +1,4 @@
-package com.example.fintech_spring.aspect;
-
+package com.example.loggingstarter.annotation;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LogExecutionTimeAspect {
 
-    @Around("execution(* *(..)) && (@within(com.example.fintech_spring.aspect.LogExecutionTime) || @annotation(com.example.fintech_spring.aspect.LogExecutionTime))")
+    @Around("execution(* *(..)) && (@within(com.example.loggingstarter.annotation.LogExecutionTime) || @annotation(com.example.loggingstarter.annotation.LogExecutionTime))")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long initTime = System.currentTimeMillis();
         Object proceed = joinPoint.proceed();
@@ -25,9 +24,8 @@ public class LogExecutionTimeAspect {
             String methodName = signature.getMethod().getName();
             String className = signature.getDeclaringTypeName();
 
-            log.trace("Class: {}, Method: {} ,Method executed in: {} ms ", className, methodName, executionTime);
+            log.info("Class: {}, Method: {} ,Method executed in: {} ms ", className, methodName, executionTime);
         }
         return proceed;
     }
 }
-

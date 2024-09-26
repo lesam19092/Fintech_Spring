@@ -1,4 +1,4 @@
-package com.example.fintech_spring.aspect;
+package com.example.loggingstarter.annotation;
 
 
 import java.lang.annotation.ElementType;
