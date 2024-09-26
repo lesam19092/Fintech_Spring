@@ -44,6 +44,7 @@ public class CategoriesController {
 
     @PutMapping("/categories/{id}")
     public ResponseEntity<Boolean> updateCategory(@PathVariable Integer id, @RequestBody Category category) {
+        categoryRepositoryService.update(id,category);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
