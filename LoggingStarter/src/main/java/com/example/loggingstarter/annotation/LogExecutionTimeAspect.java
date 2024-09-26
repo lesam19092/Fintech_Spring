@@ -24,7 +24,7 @@ public class LogExecutionTimeAspect {
             String methodName = signature.getMethod().getName();
             String className = signature.getDeclaringTypeName();
 
-            log.info("Class: {}, Method: {} ,Method executed in: {} ms ", className, methodName, executionTime);
+            log.trace("Class: {}, Method: {} ,Method executed in: {} ms ", className, methodName, executionTime);
         }
         return proceed;
     }
