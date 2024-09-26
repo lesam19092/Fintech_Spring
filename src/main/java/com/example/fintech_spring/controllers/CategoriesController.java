@@ -20,25 +20,25 @@ import java.util.Optional;
 public class CategoriesController {
 
 
-    private final RepositoryService<Integer, Category> categoryRepository;
+    private final RepositoryService<Integer, Category> categoryRepositoryService;
 
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories = categoryRepositoryService.findAll();
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
 
     @GetMapping("/categories/{id}")
     public ResponseEntity<Optional<Category>> getCategoryById(@PathVariable Integer id) {
-        Optional<Category> category = categoryRepository.findById(id);
+        Optional<Category> category = categoryRepositoryService.findById(id);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
 
     @PostMapping("/categories")
     public ResponseEntity<Category> createGategory(@RequestBody Category category) {
-        categoryRepository.save(category.getId(), category);
+        categoryRepositoryService.save(category.getId(), category);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -50,7 +50,7 @@ public class CategoriesController {
 
     @DeleteMapping(value = "/categories/{id}")
     public ResponseEntity<Boolean> deleteCategory(@PathVariable Integer id) {
-        boolean deleted = categoryRepository.deleteById(id);
+        boolean deleted = categoryRepositoryService.deleteById(id);
         return new ResponseEntity<>(deleted, HttpStatus.OK);
     }
 

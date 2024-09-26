@@ -20,26 +20,26 @@ import java.util.UUID;
 @RequestMapping("/api/v1")
 public class LocationsController {
 
-    private final RepositoryService<UUID, Location> locationRepository;
+    private final RepositoryService<UUID, Location> locationRepositoryService;
 
 
     @GetMapping(value = "/locations")
     public ResponseEntity<List<Location>> getAllLocations() {
-        List<Location> locations = locationRepository.findAll();
+        List<Location> locations = locationRepositoryService.findAll();
         return new ResponseEntity<>(locations, HttpStatus.OK);
     }
 
 
     @GetMapping(value = "/locations/{id}")
     public ResponseEntity<Optional<Location>> getLocationById(@PathVariable UUID id) {
-        Optional<Location> location = locationRepository.findById(id);
+        Optional<Location> location = locationRepositoryService.findById(id);
         return new ResponseEntity<>(location, HttpStatus.OK);
     }
 
 
     @PostMapping(value = "/locations")
     public ResponseEntity<Location> createLocation(@RequestBody Location location) {
-        locationRepository.save(location.getUuid(), location);
+        locationRepositoryService.save(location.getUuid(), location);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -51,7 +51,7 @@ public class LocationsController {
 
     @DeleteMapping(value = "/locations/{id}")
     public ResponseEntity<?> deleteLocation(@PathVariable UUID id) {
-        boolean deleted = locationRepository.deleteById(id);
+        boolean deleted = locationRepositoryService.deleteById(id);
         return new ResponseEntity<>(deleted, HttpStatus.OK);
     }
 }
