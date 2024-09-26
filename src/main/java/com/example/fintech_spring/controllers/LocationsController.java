@@ -2,8 +2,8 @@ package com.example.fintech_spring.controllers;
 
 
 import com.example.fintech_spring.aspect.LogExecutionTime;
-import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Location;
+import com.example.fintech_spring.service.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1")
 public class LocationsController {
 
-    private final Repository<UUID, Location> locationRepository;
+    private final RepositoryService<UUID, Location> locationRepository;
 
 
     @GetMapping(value = "/locations")

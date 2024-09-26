@@ -2,8 +2,8 @@ package com.example.fintech_spring.controllers;
 
 
 import com.example.fintech_spring.aspect.LogExecutionTime;
-import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Category;
+import com.example.fintech_spring.service.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import java.util.Optional;
 public class CategoriesController {
 
 
-    private final Repository<Integer, Category> categoryRepository;
+    private final RepositoryService<Integer, Category> categoryRepository;
 
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getAllCategories() {
