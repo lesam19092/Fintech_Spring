@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static java.util.stream.Collectors.toList;
+
 
 @Component
 public class RepositoryImpl<K, V> implements Repository<K, V> {
@@ -39,7 +41,7 @@ public class RepositoryImpl<K, V> implements Repository<K, V> {
 
     @Override
     public List<V> findAll() {
-        return new ArrayList<>(storage.values());
+        return List.copyOf(storage.values());
     }
 
 

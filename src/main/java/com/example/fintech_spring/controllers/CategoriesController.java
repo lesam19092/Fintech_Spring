@@ -3,7 +3,7 @@ package com.example.fintech_spring.controllers;
 
 import com.example.fintech_spring.aspect.LogExecutionTime;
 import com.example.fintech_spring.dto.Category;
-import com.example.fintech_spring.service.RepositoryService;
+import com.example.fintech_spring.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,31 +20,31 @@ import java.util.Optional;
 public class CategoriesController {
 
 
-    private final RepositoryService<Integer, Category> categoryRepositoryService;
+    private final CategoryService categoryService;
 
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryRepositoryService.findAll();
+        List<Category> categories = categoryService.findAll();
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
 
     @GetMapping("/categories/{id}")
     public ResponseEntity<Optional<Category>> getCategoryById(@PathVariable Integer id) {
-        Optional<Category> category = categoryRepositoryService.findById(id);
+        Optional<Category> category = categoryService.findById(id);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
 
     @PostMapping("/categories")
     public ResponseEntity<Category> createGategory(@RequestBody Category category) {
-        categoryRepositoryService.save(category.getId(), category);
+        categoryService.save(category.getId(), category);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/categories/{id}")
     public ResponseEntity<Boolean> updateCategory(@PathVariable Integer id, @RequestBody Category category) {
-        categoryRepositoryService.update(id,category);
+        categoryService.update(id, category);
 
         return new ResponseEntity<>(HttpStatus.OK);
 
@@ -52,7 +52,7 @@ public class CategoriesController {
 
     @DeleteMapping(value = "/categories/{id}")
     public ResponseEntity<Boolean> deleteCategory(@PathVariable Integer id) {
-        boolean deleted = categoryRepositoryService.deleteById(id);
+        boolean deleted = categoryService.deleteById(id);
         return new ResponseEntity<>(deleted, HttpStatus.OK);
     }
 
