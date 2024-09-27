@@ -3,7 +3,6 @@ package com.example.fintech_spring.controllers;
 
 import com.example.fintech_spring.dto.Category;
 import com.example.fintech_spring.service.CategoryService;
-import com.example.loggingstarter.annotation.LogExecutionTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,6 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/places")
-@LogExecutionTime
 public class CategoriesController {
 
 

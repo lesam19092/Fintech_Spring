@@ -3,7 +3,6 @@ package com.example.fintech_spring.controllers;
 
 import com.example.fintech_spring.dto.Location;
 import com.example.fintech_spring.service.LocationSerivice;
-import com.example.loggingstarter.annotation.LogExecutionTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,6 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-@LogExecutionTime
 public class LocationsController {
 
     private final LocationSerivice locationSerivice;
