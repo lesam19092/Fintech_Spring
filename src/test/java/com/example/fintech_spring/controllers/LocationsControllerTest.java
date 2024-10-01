@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ class LocationsControllerTest {
         String expectedJson = mapper
                 .writeValueAsString(new Location(id, "slug1", "name1"));
 
-        when(locationSerivice.findById(id)).thenReturn(Optional.of(location));
+        when(locationSerivice.findById(id)).thenReturn(Optional.of(location).get());
 
         mockMvc.perform(get("/api/v1/locations/{id}", id))
                 .andExpect(status().isOk())
@@ -77,10 +78,9 @@ class LocationsControllerTest {
     @Test
     void getLocationById_AndLocationNotExist() throws Exception {
         var id = UUID.randomUUID();
-        when(locationSerivice.findById(id)).thenReturn(Optional.empty());
+        when(locationSerivice.findById(id)).thenThrow(new HttpRequestMethodNotSupportedException("локации нет в базе"));
         mockMvc.perform(get("/api/v1/locations/{id}", id))
-                .andExpect(status().isOk())
-                .andExpect(content().string("null"));
+                .andExpect(status().is4xxClientError());
     }
 
 

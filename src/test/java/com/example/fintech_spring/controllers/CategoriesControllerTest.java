@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,7 @@ class CategoriesControllerTest {
         String expectedJson = mapper
                 .writeValueAsString(new Category(1, "slug1", "name1"));
 
-        when(categoryService.findById(1)).thenReturn(Optional.of(category));
+        when(categoryService.findById(1)).thenReturn(Optional.of(category).get());
 
         mockMvc.perform(get("/api/v1/places/categories/{id}", 1))
                 .andExpect(status().isOk())
@@ -69,10 +70,9 @@ class CategoriesControllerTest {
 
     @Test
     void getCategoryById_AndCategoryNotExist() throws Exception {
-        when(categoryService.findById(1000)).thenReturn(Optional.empty());
+        when(categoryService.findById(1000)).thenThrow(new HttpRequestMethodNotSupportedException("категории нет в базе"));
         mockMvc.perform(get("/api/v1/places/categories/{id}", 1000))
-                .andExpect(status().isOk())
-                .andExpect(content().string("null"));
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
