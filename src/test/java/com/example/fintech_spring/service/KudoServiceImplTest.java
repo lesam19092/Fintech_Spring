@@ -1,6 +1,8 @@
 package com.example.fintech_spring.service;
 
 
+import com.example.fintech_spring.data_source.Repository;
+import com.example.fintech_spring.data_source.RepositoryImpl;
 import com.example.fintech_spring.dto.Category;
 import com.example.fintech_spring.dto.Location;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,8 +10,10 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.mockito.InjectMocks;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -25,6 +29,8 @@ import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,8 +38,25 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 @AutoConfigureMockMvc
 public class KudoServiceImplTest {
 
-    private final ObjectMapper mapper = new ObjectMapper();
 
+    private static Repository<Integer, Category> categoryRepository;
+    private static Repository<UUID, Location> locationRepository;
+
+    @InjectMocks
+    private KudoServiceImpl kudoService;
+
+    @BeforeAll
+    public static void setUpCategoryRepository() {
+        categoryRepository = new RepositoryImpl<>();
+    }
+
+    @BeforeAll
+    public static void setUpLocationRepository() {
+        locationRepository = new RepositoryImpl<>();
+    }
+
+
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @RegisterExtension
     static WireMockExtension wireMockServer = WireMockExtension.newInstance()
@@ -57,14 +80,29 @@ public class KudoServiceImplTest {
                                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                                 .withBody(expectedJson))
         );
-        var data = getContent(wireMockServer.baseUrl() + "/place-categories");
-        Assertions.assertEquals(data.get(), expectedJson);
+        String data = getContent(wireMockServer.baseUrl() + "/place-categories").get();
+
+
+        Category category = new Category(1, "slug1", "name1");
+        Category categoryFromJson = mapper.readValue(data, Category.class);
+
+
+        categoryRepository.save(category.getId(), category);
+
+        assertAll(
+                () -> {
+                    Assertions.assertEquals(category, categoryFromJson);
+                    assertThat(categoryRepository.getTotalCount()).isEqualTo(1);
+                }
+        );
+
     }
 
     @Test
     public void fetchingLocations() throws Exception {
+        var id = UUID.randomUUID();
         String expectedJson = mapper
-                .writeValueAsString(new Location(UUID.randomUUID(), "slug1", "name1"));
+                .writeValueAsString(new Location(id, "slug1", "name1"));
         wireMockServer.stubFor(
                 WireMock.get(urlEqualTo("/locations"))
                         .willReturn(aResponse()
@@ -72,8 +110,23 @@ public class KudoServiceImplTest {
                                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                                 .withBody(expectedJson))
         );
-        var data = getContent(wireMockServer.baseUrl() + "/locations");
-        Assertions.assertEquals(data.get(), expectedJson);
+        var data = getContent(wireMockServer.baseUrl() + "/locations").get();
+
+
+        Location location = new Location(id, "slug1", "name1");
+        Location locationFromJson = mapper.readValue(data, Location.class);
+
+
+        locationRepository.save(id, location);
+
+        assertAll(
+                () -> {
+                    Assertions.assertEquals(location, locationFromJson);
+                    assertThat(locationRepository.getTotalCount()).isEqualTo(1);
+                }
+        );
+
+
     }
 
 
