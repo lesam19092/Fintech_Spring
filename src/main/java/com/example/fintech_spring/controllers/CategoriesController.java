@@ -1,12 +1,12 @@
 package com.example.fintech_spring.controllers;
 
 
-import com.example.fintech_spring.aspect.LogExecutionTime;
 import com.example.fintech_spring.dto.Category;
 import com.example.fintech_spring.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@LogExecutionTime
 @RequestMapping("/api/v1/places")
 public class CategoriesController {
 
@@ -30,8 +29,8 @@ public class CategoriesController {
 
 
     @GetMapping("/categories/{id}")
-    public ResponseEntity<Optional<Category>> getCategoryById(@PathVariable Integer id) {
-        Optional<Category> category = categoryService.findById(id);
+    public ResponseEntity<Category> getCategoryById(@PathVariable Integer id) throws HttpRequestMethodNotSupportedException {
+        Category category = categoryService.findById(id);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
