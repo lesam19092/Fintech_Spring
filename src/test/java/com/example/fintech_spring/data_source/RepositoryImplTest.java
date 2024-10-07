@@ -3,8 +3,6 @@ package com.example.fintech_spring.data_source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +18,7 @@ class RepositoryImplTest {
     }
 
     @Test
-    void testSave_ShouldStoreKeyValue() {
+    public void testSave_ShouldStoreKeyValue() {
         String key = "testKey";
         Integer value = 10;
         repository.save(key, value);
@@ -50,7 +48,7 @@ class RepositoryImplTest {
     }
 
     @Test
-    void testDeleteById_ExistingKey_ShouldReturnTrue() {
+    public void testDeleteById_ExistingKey_ShouldReturnTrue() {
         String existingKey = "deleteKey";
         Integer value = 30;
         repository.save(existingKey, value);
@@ -64,14 +62,14 @@ class RepositoryImplTest {
     }
 
     @Test
-    void testDeleteById_NonExistingKey_ShouldReturnFalse() {
+    public void testDeleteById_NonExistingKey_ShouldReturnFalse() {
         String nonExistingKey = "notThere";
         boolean deleted = repository.deleteById(nonExistingKey);
         assertFalse(deleted);
     }
 
     @Test
-    void testExistsById_ExistingKey_ShouldReturnTrue() {
+    public void testExistsById_ExistingKey_ShouldReturnTrue() {
         String existingKey = "exists";
         Integer value = 40;
         repository.save(existingKey, value);
@@ -80,7 +78,7 @@ class RepositoryImplTest {
     }
 
     @Test
-    void testExistsById_NonExistingKey_ShouldReturnFalse() {
+    public void testExistsById_NonExistingKey_ShouldReturnFalse() {
         String nonExistingKey = "missing";
         boolean exists = repository.existsById(nonExistingKey);
         assertFalse(exists);
