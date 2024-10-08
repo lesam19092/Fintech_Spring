@@ -1,15 +1,13 @@
-package com.example.fintech_spring.exception;
+package com.example.hw8.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
-
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-class ApiError {
-    private HttpStatus status;
+public class ErrorResponse {
+    private int code;
     private String message;
 }
