@@ -1,0 +1,11 @@
+app:
+  baseUrl: "https://cbr.ru/scripts"
+
+spring:
+  application:
+    name: hw8
+
+
+
+server:
+  port: 8080
