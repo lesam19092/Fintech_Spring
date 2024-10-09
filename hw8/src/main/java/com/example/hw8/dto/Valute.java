@@ -19,19 +19,6 @@ public class Valute {
     @JacksonXmlProperty(localName = "Nominal")
     private int nominal;
 
-    @Override
-    public String toString() {
-        return "Valute{" +
-                "id='" + id + '\'' +
-                ", numCode='" + numCode + '\'' +
-                ", charCode='" + charCode + '\'' +
-                ", nominal=" + nominal +
-                ", name='" + name + '\'' +
-                ", value='" + value + '\'' +
-                ", vunitRate='" + vunitRate + '\'' +
-                '}';
-    }
-
     @JacksonXmlProperty(localName = "Name")
     private String name;
 
