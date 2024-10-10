@@ -88,6 +88,7 @@ public class CurrencyServiceImpl implements CurrencyService {
         if (valute.isPresent()) {
             return valute.get();
         }
+        log.error("Currency not found in CBR");
         throw new CurrencyExistsButNotFoundException("валюта существует , но в цб ее нет");
     }
 }
