@@ -1,0 +1,127 @@
+openapi: 3.0.0
+info:
+  title: Currency API
+  description: API for managing currencies and converting amounts
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+paths:
+  /currencies:
+    get:
+      summary: List all currencies
+      operationId: listCurrencies
+      tags:
+        - currencies
+      responses:
+        '200':
+          description: A list of currencies.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Currency'
+    post:
+      summary: Add a new currency
+      operationId: addCurrency
+      tags:
+        - currencies
+      requestBody:
+        description: Currency to add to the system
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Currency'
+      responses:
+        '201':
+          description: Currency added
+  /currencies/{code}:
+    get:
+      summary: Get a currency by code
+      operationId: getCurrencyByCode
+      tags:
+        - currencies
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A currency
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Currency'
+        '404':
+          description: Currency not found
+  /convert:
+    post:
+      summary: Convert currency amount
+      operationId: convertCurrency
+      tags:
+        - currencies
+      requestBody:
+        description: Conversion request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConversionRequest'
+      responses:
+        '200':
+          description: Conversion result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversionResponse'
+        '400':
+          description: Invalid request
+components:
+  schemas:
+    Currency:
+      type: object
+      required:
+        - code
+        - name
+        - value
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        value:
+          type: string
+    ConversionRequest:
+      type: object
+      required:
+        - fromCurrency
+        - toCurrency
+        - amount
+      properties:
+        fromCurrency:
+          type: string
+        toCurrency:
+          type: string
+        amount:
+          type: number
+          format: double
+    ConversionResponse:
+      type: object
+      properties:
+        fromCurrency:
+          type: string
+        toCurrency:
+          type: string
+        convertedAmount:
+          type: number
+          format: double
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+        message:
+          type: string

@@ -1,13 +1,14 @@
-package com.example.fintech_spring;
+package com.example.hw8;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FintechSpringApplication {
+public class Hw8Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(FintechSpringApplication.class, args);
+
+        SpringApplication.run(Hw8Application.class, args);
     }
 
 }
