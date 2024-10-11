@@ -55,5 +55,11 @@ public class RepositoryImpl<K, V> implements Repository<K, V> {
         return storage.size();
     }
 
+    @Override
+    public void clear() {
+        storage.clear();
+    }
+
+
 }
 

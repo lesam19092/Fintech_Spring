@@ -1,9 +1,8 @@
 package com.example.fintech_spring.controllers;
 
 
-import com.example.fintech_spring.aspect.LogExecutionTime;
 import com.example.fintech_spring.dto.Category;
-import com.example.fintech_spring.service.CategoryService;
+import com.example.fintech_spring.service.controlling.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@LogExecutionTime
 @RequestMapping("/api/v1/places")
 public class CategoriesController {
 

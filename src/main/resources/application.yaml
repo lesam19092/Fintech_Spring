@@ -6,6 +6,12 @@ spring:
 
 
 
+thread:
+  count: 16
+
+duration:
+  delay: 10
+
 server:
   port: 8080
 

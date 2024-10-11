@@ -1,4 +1,4 @@
-package com.example.fintech_spring.service;
+package com.example.fintech_spring.service.controlling;
 
 import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Category;
@@ -11,6 +11,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+
+    //TODO add the missing implementation
+    //TODO поменять названеие папки
 
     private final Repository<Integer, Category> categoryRepository;
 

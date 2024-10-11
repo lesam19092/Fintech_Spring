@@ -1,4 +1,4 @@
-package com.example.fintech_spring.service;
+package com.example.fintech_spring.service.controlling;
 
 import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Location;
