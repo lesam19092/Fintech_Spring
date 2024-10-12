@@ -31,7 +31,7 @@ public class KudoServiceImpl implements KudoService {
 
     private final Repository<UUID, Location> locationRepository;
 
-    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplateForEvents;
 
     @Qualifier("executorServiceForFetchingData")
     private final ExecutorService executorServiceForFetchingData;
@@ -78,7 +78,7 @@ public class KudoServiceImpl implements KudoService {
 
         try {
             ResponseEntity<List<Category>> rateResponse =
-                    restTemplate.exchange("/place-categories",
+                    restTemplateForEvents.exchange("/place-categories",
                             HttpMethod.GET, null, new ParameterizedTypeReference<List<Category>>() {
                             });
             rateResponse.getBody()
@@ -96,7 +96,7 @@ public class KudoServiceImpl implements KudoService {
 
         try {
             ResponseEntity<List<Location>> rateResponse =
-                    restTemplate.exchange("/locations",
+                    restTemplateForEvents.exchange("/locations",
                             HttpMethod.GET, null, new ParameterizedTypeReference<>() {
                             });
             rateResponse.getBody()
