@@ -12,17 +12,18 @@ public class RestTemplateConfiguration {
 
 
     @Value("${app.baseUrl}")
-    private String baseUrl;
+    private String baseUrlForEvents;
 
     @Value("${app.baseUrlForConvertValute}")
     private String baseUrlForConvertValute;
 
     @Bean
-    public RestTemplate restTemplate() {
+    public RestTemplate restTemplateForEvents() {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(baseUrl));
+        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(baseUrlForEvents));
         return restTemplate;
     }
+
     @Bean
     public RestTemplate restTemplateForConvertValute() {
         RestTemplate restTemplate = new RestTemplate();

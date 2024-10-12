@@ -1,10 +1,14 @@
 app:
   baseUrl: "https://kudago.com/public-api/v1.4"
-  baseUrlForConvertValute: "http://localhost:4040/"
+  baseUrlForConvertValute: "http://localhost:4040"
+
+
+api:
+  client: reactive
+
 spring:
   application:
     name: Fintech_Spring
-
 
 
 thread:
