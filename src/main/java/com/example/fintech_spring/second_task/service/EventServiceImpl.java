@@ -57,7 +57,7 @@ public class EventServiceImpl implements EventService {
             listOfEvents.get();
             amountOfMoney.get();
             long endTime = System.currentTimeMillis();
-            log.info("Completed in {} ms", (endTime - startTime));
+            log.debug("Completed in {} ms", (endTime - startTime));
         } catch (InterruptedException | ExecutionException e) {
             log.error("Error during data processing", e);
         }
@@ -66,10 +66,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> getEvents(LocalDate dateFrom, LocalDate dateTo) {
-        log.info("Fetching events from {} to {}", dateFrom, dateTo);
         ApiEvent apiEvent = restTemplate.getForObject(getUrl(dateFrom, dateTo), ApiEvent.class);
         List<Event> events = apiEvent.getResults();
-        log.info("Fetched {} events", events.size());
+        log.debug("Fetched {} events", events.size());
         return setEventPrices(events);
     }
 
@@ -102,12 +101,12 @@ public class EventServiceImpl implements EventService {
         long actual_until = getActualUntil(dateTo);
         String url = String.format("/events/?location=spb&fields=price,id,title,dates&actual_since=%d&actual_until=%d",
                 actual_since, actual_until);
-        log.info("Generated URL: {}", url);
+        log.debug("Generated URL: {}", url);
         return url;
     }
 
     private List<Event> setEventPrices(List<Event> events) {
-        log.info("Setting prices for events");
+        log.debug("Setting prices for events");
         events.forEach(event -> {
             Pattern pattern = Pattern.compile("^\\D*(\\d+)");
             Matcher matcher = pattern.matcher(event.getPrice());
