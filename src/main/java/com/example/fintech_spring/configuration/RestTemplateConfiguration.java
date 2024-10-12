@@ -14,10 +14,19 @@ public class RestTemplateConfiguration {
     @Value("${app.baseUrl}")
     private String baseUrl;
 
+    @Value("${app.baseUrlForConvertValute}")
+    private String baseUrlForConvertValute;
+
     @Bean
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(baseUrl));
+        return restTemplate;
+    }
+    @Bean
+    public RestTemplate restTemplateForConvertValute() {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(baseUrlForConvertValute));
         return restTemplate;
     }
 }
