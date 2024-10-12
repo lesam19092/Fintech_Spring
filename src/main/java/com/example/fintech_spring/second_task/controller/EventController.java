@@ -1,6 +1,7 @@
 package com.example.fintech_spring.second_task.controller;
 
 
+import com.example.fintech_spring.second_task.client.ApiClient;
 import com.example.fintech_spring.second_task.dto.Event;
 import com.example.fintech_spring.second_task.service.EventService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class EventController {
     private final EventService eventService;
 
 
+
     @GetMapping("/events")
     public List<Event> getEvents(
             @RequestParam(name = "budget", required = true) @Min(1) Double budget, @RequestParam(name = "currency", required = true) String currency,
@@ -28,7 +30,8 @@ public class EventController {
             @RequestParam(name = "dateTo", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo
     ) throws ExecutionException, InterruptedException {
 
-        return eventService.getSuitableEvents(budget, currency, dateFrom, dateTo);
+
+        return eventService.getSuitableEventsMono(budget, currency, dateFrom, dateTo).block();
     }
 
 }

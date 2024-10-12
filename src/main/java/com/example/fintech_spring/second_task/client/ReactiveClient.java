@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -93,5 +95,33 @@ public class ReactiveClient implements ApiClient {
         return events;
     }
 
+
+    public Mono<List<Event>> getEventsMono(LocalDate dateFrom, LocalDate dateTo) {
+
+        log.info("Fetching events from {} to {}", dateFrom, dateTo);
+
+        return webClientForEvents.get()
+                .uri(getUrl(dateFrom, dateTo))
+                .retrieve()
+                .bodyToMono(ApiEvent.class)
+                .map(ApiEvent::getResults)
+                .map(this::setEventPrices)
+                .doOnNext(events -> log.info("Fetched {} events", events.size()));
+
+    }
+
+    public Mono<Double> getAmountInRubMono(Double budget, String fromCurrency) {
+        log.info("Converting budget {} {} to RUB", budget, fromCurrency);
+        CurrencyRequest currencyRequest = CurrencyRequest.builder()
+                .fromCurrency(fromCurrency)
+                .amount(budget).build();
+        return webClientForConvertValute.post()
+                .uri("/currencies/convert")
+                .bodyValue(currencyRequest)
+                .retrieve()
+                .bodyToMono(CurrencyResponse.class)
+                .map(CurrencyResponse::getConvertedAmount)
+                .doOnNext(amount -> log.info("Converted amount: {}", amount));
+    }
 
 }
