@@ -2,7 +2,7 @@ package com.example.fintech_spring.controllers;
 
 
 import com.example.fintech_spring.dto.Location;
-import com.example.fintech_spring.service.controlling.LocationSeriviceImpl;
+import com.example.fintech_spring.service.dto_service.LocationSeriviceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
