@@ -2,7 +2,7 @@ package com.example.fintech_spring.controllers;
 
 
 import com.example.fintech_spring.dto.Location;
-import com.example.fintech_spring.service.controlling.LocationSerivice;
+import com.example.fintech_spring.service.controlling.LocationSeriviceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1")
 public class LocationsController {
 
-    private final LocationSerivice locationSerivice;
+    private final LocationSeriviceImpl locationSerivice;
 
 
     @GetMapping(value = "/locations")

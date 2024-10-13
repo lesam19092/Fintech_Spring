@@ -11,6 +11,7 @@ import java.util.concurrent.ScheduledExecutorService;
 @Configuration
 public class ExecutorConfiguration {
 
+    //TODO ConfiguraionOnProperties
 
     @Value("${thread.count}")
     private int threadCount;

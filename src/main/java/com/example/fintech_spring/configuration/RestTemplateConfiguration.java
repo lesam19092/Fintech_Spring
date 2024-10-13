@@ -10,6 +10,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 @Configuration
 public class RestTemplateConfiguration {
 
+    //TODO ConfiguraionOnProperties
 
     @Value("${app.baseUrl}")
     private String baseUrlForEvents;

@@ -8,6 +8,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class ReactiveConfiguration {
 
+    //TODO ConfiguraionOnProperties
+
     @Value("${app.baseUrl}")
     private String baseUrlForEvents;
 
