@@ -23,4 +23,4 @@ resilience4j.circuitbreaker:
 
 
 server:
-  port: 8080
+  port: 4040
