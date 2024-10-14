@@ -21,15 +21,13 @@ public class EventController {
 
     private final EventService eventService;
 
-
-
     @GetMapping("/events")
     public List<Event> getEvents(
-            @RequestParam(name = "budget", required = true) @Min(1) Double budget, @RequestParam(name = "currency", required = true) String currency,
+            @RequestParam(name = "budget", required = true) @Min(1) Double budget,
+            @RequestParam(name = "currency", required = true) String currency,
             @RequestParam(name = "dateFrom", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
             @RequestParam(name = "dateTo", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo
     ) throws ExecutionException, InterruptedException {
-
 
         return eventService.getSuitableEventsMono(budget, currency, dateFrom, dateTo).block();
     }
