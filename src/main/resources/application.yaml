@@ -1,10 +1,23 @@
 app:
-  baseUrl: "https://kudago.com/public-api/v1.4"
+    baseUrlForEvents: "https://kudago.com/public-api/v1.4"
+    baseUrlForConvertValute: "http://localhost:4040"
+
+
+api:
+  client:
+    reactive:
+      enabled: false
+
 spring:
   application:
     name: Fintech_Spring
 
 
+thread:
+  threadCount: 16
+
+duration:
+  delay: 10
 
 server:
   port: 8080

@@ -6,7 +6,9 @@ import com.example.fintech_spring.dto.Category;
 import com.example.fintech_spring.dto.Location;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -16,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.*;
 
 @Service
 @Slf4j
@@ -27,23 +30,54 @@ public class KudoServiceImpl implements KudoService {
 
     private final Repository<UUID, Location> locationRepository;
 
-    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplateForEvents;
+
+    @Qualifier("executorServiceForFetchingData")
+    private final ExecutorService executorServiceForFetchingData;
+
+    @Qualifier("executorSheduled")
+    private final ScheduledExecutorService executorSheduled;
+
+    @Value("${duration.delay}")
+    private int delay;
 
 
-    @EventListener(ApplicationReadyEvent.class)
-    private void fetchingRepositories() {
-        log.info("Application starting, fetching categories...");
-        fetchingCategories();
+    @EventListener(ApplicationStartedEvent.class)
+    private void scheduleDataInitialization() {
 
-        log.info("Fetching locations...");
-        fetchingLocations();
+
+        executorSheduled.scheduleAtFixedRate(this::initializeData, 0, delay, TimeUnit.SECONDS);
     }
+
+    private void initializeData() {
+        long startTime = System.currentTimeMillis();
+        log.info("Starting data initialization...");
+
+        CompletableFuture<Void> categoriesFuture = CompletableFuture.runAsync(this::fetchingCategories, executorServiceForFetchingData);
+        CompletableFuture<Void> locationsFuture = CompletableFuture.runAsync(this::fetchingLocations, executorServiceForFetchingData);
+
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(categoriesFuture, locationsFuture);
+        try {
+            allOf.get();
+            long endTime = System.currentTimeMillis();
+
+
+            log.info("Data initialization completed in {} ms", (endTime - startTime));
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("Error during data initialization", e);
+        }
+
+    }
+
 
     @Override
     public void fetchingCategories() {
+
+        categoryRepository.clear();
+
         try {
             ResponseEntity<List<Category>> rateResponse =
-                    restTemplate.exchange("/place-categories",
+                    restTemplateForEvents.exchange("/place-categories",
                             HttpMethod.GET, null, new ParameterizedTypeReference<List<Category>>() {
                             });
             rateResponse.getBody()
@@ -56,9 +90,12 @@ public class KudoServiceImpl implements KudoService {
 
     @Override
     public void fetchingLocations() {
+
+        locationRepository.clear();
+
         try {
             ResponseEntity<List<Location>> rateResponse =
-                    restTemplate.exchange("/locations",
+                    restTemplateForEvents.exchange("/locations",
                             HttpMethod.GET, null, new ParameterizedTypeReference<>() {
                             });
             rateResponse.getBody()
