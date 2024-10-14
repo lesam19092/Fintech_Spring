@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Data
 @Configuration
 @ConditionalOnProperty(name = "api.client.reactive.enabled", havingValue = "true")
-@ConfigurationProperties(prefix = "app.reactive-client")
+@ConfigurationProperties(prefix = "app")
 public class ReactiveConfiguration {
 
     private String baseUrlForEvents;

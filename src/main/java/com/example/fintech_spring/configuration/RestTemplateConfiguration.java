@@ -12,7 +12,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 @Data
 @Configuration
 @ConditionalOnProperty(name = "api.client.reactive.enabled", havingValue = "false")
-@ConfigurationProperties(prefix = "app.rest-template")
+@ConfigurationProperties(prefix = "app")
 public class RestTemplateConfiguration {
 
     private String baseUrlForEvents;
