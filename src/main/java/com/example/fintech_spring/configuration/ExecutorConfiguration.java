@@ -14,10 +14,6 @@ import java.util.concurrent.ScheduledExecutorService;
 @ConfigurationProperties(prefix = "thread")
 public class ExecutorConfiguration {
 
-
-    //TODO НАПИСАТЬ АЛЕКСАНДРУ
-    //TODO реафкториг
-
     private int threadCount;
 
     @Bean
