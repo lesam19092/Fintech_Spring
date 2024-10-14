@@ -1,21 +1,21 @@
 package com.example.fintech_spring.configuration;
 
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.Data;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+@Data
 @Configuration
+@ConditionalOnProperty(name = "api.client.reactive.enabled", havingValue = "false")
+@ConfigurationProperties(prefix = "app.rest-template")
 public class RestTemplateConfiguration {
 
-    //TODO ConfiguraionOnProperties
-
-    @Value("${app.baseUrl}")
     private String baseUrlForEvents;
-
-    @Value("${app.baseUrlForConvertValute}")
     private String baseUrlForConvertValute;
 
     @Bean

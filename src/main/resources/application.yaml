@@ -1,10 +1,16 @@
 app:
-  baseUrl: "https://kudago.com/public-api/v1.4"
-  baseUrlForConvertValute: "http://localhost:4040"
+  rest-template:
+    baseUrlForEvents: "https://kudago.com/public-api/v1.4"
+    baseUrlForConvertValute: "http://localhost:4040"
+  reactive-client:
+    baseUrlForEvents: "https://kudago.com/public-api/v1.4"
+    baseUrlForConvertValute: "http://localhost:4040"
 
 
 api:
-  client: reactive
+  client:
+    reactive:
+      enabled: true
 
 spring:
   application:
@@ -12,7 +18,7 @@ spring:
 
 
 thread:
-  count: 16
+  threadCount: 16
 
 duration:
   delay: 10
