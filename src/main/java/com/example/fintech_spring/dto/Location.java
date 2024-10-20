@@ -1,18 +1,29 @@
 package com.example.fintech_spring.dto;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import java.io.Serializable;
-import java.util.UUID;
+@Getter
+@Setter
+@Entity
+@Table(name = "locations")
+public class Location {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Integer id;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class Location implements Serializable {
-    private int id;
+    @Column(name = "slug", nullable = false, length = 50)
     private String slug;
+
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
+
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Event> events = new LinkedHashSet<>();
+
 }

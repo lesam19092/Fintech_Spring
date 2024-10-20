@@ -1,19 +1,32 @@
 package com.example.fintech_spring.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.io.Serializable;
+import java.sql.Timestamp;
 
-@Data
-public class Event implements Serializable {
+@Getter
+@Setter
+@Entity
+@Table(name = "events")
+public class Event {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Integer id;
 
-    @JsonProperty("id")
-    private int id;
-    @JsonProperty("title")
+    @Column(name = "title", nullable = false, length = 50)
     private String title;
-    @JsonProperty("price")
-    private double price;
-    private String location;
+
+    @Column(name = "date", nullable = false)
+    private Timestamp date;
+
+    @Column(name = "price", nullable = false)
+    private Double price;
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "location_id")
+    private Location location;
 
 }
