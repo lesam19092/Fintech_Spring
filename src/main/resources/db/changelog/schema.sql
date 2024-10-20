@@ -3,8 +3,8 @@ CREATE TABLE Locations
 
     id   INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     slug VARCHAR(50) NOT NULL,
-    name VARCHAR(50) NOT NULL,
-)
+    name VARCHAR(50) NOT NULL
+);
 
 CREATE TABLE Events
 (
@@ -14,4 +14,4 @@ CREATE TABLE Events
     price       FLOAT                    NOT NULL,
     location_id INT,
     FOREIGN KEY (location_id) REFERENCES Locations (id)
-)
+);
