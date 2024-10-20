@@ -1,4 +1,4 @@
-package com.example.fintech_spring.service;
+package com.example.fintech_spring.service.kudo;
 
 public interface KudoService {
 
