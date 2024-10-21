@@ -3,42 +3,29 @@ package com.example.fintech_spring.service.event;
 import com.example.fintech_spring.dto.EventDto;
 import com.example.fintech_spring.dto.entity.Event;
 import com.example.fintech_spring.repository.EventRepository;
-import com.example.fintech_spring.service.location.LocationService;
+import com.example.fintech_spring.repository.LocationRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventSerivce {
 
     private final EventRepository eventRepository;
-    private final LocationService locationService;
+    private final LocationRepository locationRepository;
 
     @Override
     public void save(EventDto eventDto) {
-        eventRepository.save(getEvent(eventDto));
+        eventRepository.save(getEventFromDto(eventDto));
     }
 
     @Override
     public EventDto findById(Integer id) {
-
-        Optional<Event> optional = eventRepository.findById(id);
-
-        if (optional.isPresent()) {
-            Event event = optional.get();
-
-            return new EventDto(
-                    event.getTitle(),
-                    event.getDate(),
-                    event.getPrice(),
-                    event.getLocation().getId());
-        }
-
-        throw new EntityNotFoundException("Event with id " + id + " not found");
-
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Event with id " + id + " not found"));
+        return convertToDto(event);
     }
 
     @Override
@@ -48,22 +35,37 @@ public class EventServiceImpl implements EventSerivce {
 
     @Override
     public void update(Integer id, EventDto eventDto) {
-        Optional<Event> existingEvent = eventRepository.findById(id);
-        if (existingEvent.isPresent()) {
-            eventRepository.save(getEvent(eventDto));
-        } else {
-            throw new EntityNotFoundException("Location with id " + id + " not found");
-        }
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Event with id " + id + " not found"));
+        updateEventFromDto(event, eventDto);
+        eventRepository.save(event);
+    }
 
+    private void updateEventFromDto(Event event, EventDto eventDto) {
+        event.setDate(eventDto.getDate());
+        event.setTitle(eventDto.getTitle());
+        event.setPrice(eventDto.getPrice());
+        event.setLocation(locationRepository.findById(eventDto.getLocationId())
+                .orElseThrow(() -> new EntityNotFoundException("Location with id " + eventDto.getLocationId() + " not found")));
     }
 
 
-    private Event getEvent(EventDto eventDto) {
+    private Event getEventFromDto(EventDto eventDto) {
         Event event = new Event();
         event.setDate(eventDto.getDate());
         event.setTitle(eventDto.getTitle());
         event.setPrice(eventDto.getPrice());
-        event.setLocation(locationService.findById(eventDto.getLocationId()));
+        event.setLocation(locationRepository.findById(eventDto.getLocationId())
+                .orElseThrow(() -> new EntityNotFoundException("Location with id " + eventDto.getLocationId() + " not found")));
         return event;
+    }
+
+    private EventDto convertToDto(Event event) {
+        return new EventDto(
+                event.getTitle(),
+                event.getDate(),
+                event.getPrice(),
+                event.getLocation().getId()
+        );
     }
 }
