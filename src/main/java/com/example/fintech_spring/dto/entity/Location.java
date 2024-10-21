@@ -1,4 +1,4 @@
-package com.example.fintech_spring.dto;
+package com.example.fintech_spring.dto.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
