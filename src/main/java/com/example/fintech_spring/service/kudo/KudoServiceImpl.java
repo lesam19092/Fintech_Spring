@@ -1,7 +1,7 @@
 package com.example.fintech_spring.service.kudo;
 
 
-import com.example.fintech_spring.dto.Location;
+import com.example.fintech_spring.dto.entity.Location;
 import com.example.fintech_spring.service.location.LocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +31,8 @@ public class KudoServiceImpl implements KudoService {
                     restTemplate.exchange("/locations",
                             HttpMethod.GET, null, new ParameterizedTypeReference<>() {
                             });
-            rateResponse.getBody()
-                    .forEach(locationService::save);
+         /*   rateResponse.getBody()
+                    .forEach(locationService::save);*/
             log.info("Successfully fetched and stored locations");
         } catch (Exception ex) {
             log.error("Error fetching categories:", ex);
