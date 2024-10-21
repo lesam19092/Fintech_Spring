@@ -1,17 +1,14 @@
 package com.example.fintech_spring.service.location;
 
-import com.example.fintech_spring.dto.Location;
-
-import java.util.List;
-import java.util.Optional;
+import com.example.fintech_spring.dto.LocationDto;
 
 public interface LocationService {
-    void save(Location location);
+    void save(LocationDto locationDto);
 
-    Location findById(Integer id);
+    LocationDto findById(Integer id);
 
     void deleteById(Integer id);
 
-    void update(Location location);
+    void update(Integer id, LocationDto locationDto);
 
 }
