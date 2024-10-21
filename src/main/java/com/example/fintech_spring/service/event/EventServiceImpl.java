@@ -8,6 +8,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +42,14 @@ public class EventServiceImpl implements EventSerivce {
                 .orElseThrow(() -> new EntityNotFoundException("Event with id " + id + " not found"));
         updateEventFromDto(event, eventDto);
         eventRepository.save(event);
+    }
+
+    @Override
+    public List<EventDto> findEventsByFilter(String title, String place, LocalDate dateFrom, LocalDate toDate) {
+        return eventRepository.findAll(EventRepository.buildSpecification(title, place, dateFrom, toDate))
+                .stream()
+                .map(this::convertToDto)
+                .toList();
     }
 
     private void updateEventFromDto(Event event, EventDto eventDto) {

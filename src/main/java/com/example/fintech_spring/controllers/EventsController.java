@@ -3,7 +3,11 @@ package com.example.fintech_spring.controllers;
 import com.example.fintech_spring.dto.EventDto;
 import com.example.fintech_spring.service.event.EventSerivce;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -36,4 +40,14 @@ public class EventsController {
     }
 
 
+    @GetMapping("/events/filter")
+    public List<EventDto> getEvents(
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "place", required = false) String place,
+            @RequestParam(value = "fromDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
+            @RequestParam(value = "toDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate toDate
+
+    ) {
+        return eventSerivce.findEventsByFilter(title, place, dateFrom, toDate);
+    }
 }
