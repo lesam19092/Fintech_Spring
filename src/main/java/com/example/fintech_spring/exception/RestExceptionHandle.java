@@ -1,5 +1,6 @@
 package com.example.fintech_spring.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,13 @@ public class RestExceptionHandle {
         String message = "Failed to read request body. Please ensure the request body is formatted correctly.";
         return new ApiError(HttpStatus.BAD_REQUEST, String.format("Сообщение: %s\nОшибка: %s%n", message, ex.getMessage()));
     }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handle(EntityNotFoundException ex) {
+        return new ApiError(HttpStatus.BAD_REQUEST, String.format("Сообщение:Ошибка: %s%n", ex.getMessage()));
+    }
+
 
 
 }
