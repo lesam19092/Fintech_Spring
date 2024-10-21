@@ -5,6 +5,7 @@ import com.example.fintech_spring.dto.entity.Event;
 import com.example.fintech_spring.repository.EventRepository;
 import com.example.fintech_spring.repository.LocationRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class EventServiceImpl implements EventSerivce {
+@Transactional
+public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final LocationRepository locationRepository;
@@ -51,6 +53,17 @@ public class EventServiceImpl implements EventSerivce {
                 .map(this::convertToDto)
                 .toList();
     }
+
+    @Override
+    public void deleteAll() {
+        eventRepository.deleteAll();
+    }
+
+    @Override
+    public List<Event> findAll() {
+        return eventRepository.findAll();
+    }
+
 
     private void updateEventFromDto(Event event, EventDto eventDto) {
         event.setDate(eventDto.getDate());
