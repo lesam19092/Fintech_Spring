@@ -26,7 +26,7 @@ public class EventServiceImpl implements EventSerivce {
 
     @Override
     public EventDto findById(Integer id) {
-        Event event = eventRepository.findById(id)
+        Event event = eventRepository.findByIdWithLocations(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event with id " + id + " not found"));
         return convertToDto(event);
     }
@@ -38,7 +38,7 @@ public class EventServiceImpl implements EventSerivce {
 
     @Override
     public void update(Integer id, EventDto eventDto) {
-        Event event = eventRepository.findById(id)
+        Event event = eventRepository.findByIdWithLocations(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event with id " + id + " not found"));
         updateEventFromDto(event, eventDto);
         eventRepository.save(event);

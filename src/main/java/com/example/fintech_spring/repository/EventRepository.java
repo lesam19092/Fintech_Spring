@@ -1,23 +1,23 @@
 package com.example.fintech_spring.repository;
 
 import com.example.fintech_spring.dto.entity.Event;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import com.example.fintech_spring.dto.entity.Location;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-import javax.swing.text.html.HTMLDocument;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
 
     List<Event> findAll(Specification<Event> specification);
 
+    @Query("SELECT e FROM Event e JOIN FETCH e.location WHERE e.id = :id")
+    Optional<Event> findByIdWithLocations(Integer id);
 
     static Specification<Event> buildSpecification(String title, String place, LocalDate dateFrom, LocalDate toDate) {
         List<Specification<Event>> specifications = new ArrayList<>();

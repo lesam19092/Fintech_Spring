@@ -12,7 +12,10 @@ spring:
       properties:
         hibernate:
           dialect: org.hibernate.dialect.PostgreSQLDialect
-
+logging:
+  level:
+    sql: debug
+    org.hibernate.orm.jdbc.bind: trace
 
 
 server:

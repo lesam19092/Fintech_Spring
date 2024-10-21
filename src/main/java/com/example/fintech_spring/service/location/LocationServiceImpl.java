@@ -23,7 +23,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public LocationDto findById(Integer id) {
-        Location location = locationRepository.findById(id)
+        Location location = locationRepository.findByIdWithEvents(id)
                 .orElseThrow(() -> new EntityNotFoundException("Location with id " + id + " not found"));
         return convertToDto(location);
 
@@ -36,7 +36,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public void update(Integer id, LocationDto locationDto) {
-        Location location = locationRepository.findById(id)
+        Location location = locationRepository.findByIdWithEvents(id)
                 .orElseThrow(() -> new EntityNotFoundException("Location with id " + id + " not found"));
         updateLocationFromDto(location, locationDto);
         locationRepository.save(location);
