@@ -5,12 +5,16 @@ import com.example.fintech_spring.dto.entity.Event;
 import com.example.fintech_spring.dto.entity.Location;
 import com.example.fintech_spring.repository.LocationRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LocationServiceImpl implements LocationService {
 
 
@@ -23,7 +27,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public LocationDto findById(Integer id) {
-        Location location = locationRepository.findByIdWithEvents(id)
+        Location location = locationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Location with id " + id + " not found"));
         return convertToDto(location);
 
@@ -36,12 +40,22 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public void update(Integer id, LocationDto locationDto) {
-        Location location = locationRepository.findByIdWithEvents(id)
+        Location location = locationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Location with id " + id + " not found"));
         updateLocationFromDto(location, locationDto);
         locationRepository.save(location);
 
     }
+
+    @Override
+    public void deleteAll() {
+        locationRepository.deleteAll();
+    }
+
+    public List<Location> findAll() {
+        return locationRepository.findAll();
+    }
+
 
     private LocationDto convertToDto(Location location) {
         return new LocationDto(
