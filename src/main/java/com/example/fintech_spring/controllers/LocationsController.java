@@ -1,7 +1,7 @@
 package com.example.fintech_spring.controllers;
 
 
-import com.example.fintech_spring.dto.Location;
+import com.example.fintech_spring.dto.LocationDto;
 import com.example.fintech_spring.service.location.LocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,20 +16,20 @@ public class LocationsController {
 
 
     @GetMapping("/locations/{id}")
-    public Location getLocationById(@PathVariable Integer id) {
+    public LocationDto getLocationById(@PathVariable Integer id) {
         return locationService.findById(id);
     }
 
 
     @PostMapping("/locations")
-    public void createLocation(@RequestBody Location location) {
-        locationService.save(location);
+    public void createLocation(@RequestBody LocationDto locationDto) {
+        locationService.save(locationDto);
     }
 
 
-    @PutMapping("/locations")
-    public void updateLocation(@RequestBody Location location) {
-        locationService.update(location);
+    @PutMapping("/locations/{id}")
+    public void updateLocation(@PathVariable Integer id, @RequestBody LocationDto locationDto) {
+        locationService.update(id, locationDto);
     }
 
     @DeleteMapping("/locations/{id}")
