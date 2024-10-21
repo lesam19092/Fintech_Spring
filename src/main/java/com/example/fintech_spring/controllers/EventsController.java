@@ -1,6 +1,6 @@
 package com.example.fintech_spring.controllers;
 
-import com.example.fintech_spring.dto.Event;
+import com.example.fintech_spring.dto.EventDto;
 import com.example.fintech_spring.service.event.EventSerivce;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,20 +14,20 @@ public class EventsController {
 
 
     @GetMapping("/events/{id}")
-    public Event getEventById(@PathVariable Integer id) {
+    public EventDto getEventById(@PathVariable Integer id) {
         return eventSerivce.findById(id);
     }
 
 
     @PostMapping("/events")
-    public void createEvent(@RequestBody Event event) {
-        eventSerivce.save(event);
+    public void createEvent(@RequestBody EventDto eventDto) {
+        eventSerivce.save(eventDto);
     }
 
 
-    @PutMapping("/events")
-    public void updateEvent(@RequestBody Event event) {
-        eventSerivce.update(event);
+    @PutMapping("/events/{id}")
+    public void updateEvent(@PathVariable Integer id, @RequestBody EventDto eventDto) {
+        eventSerivce.update(id, eventDto);
     }
 
     @DeleteMapping("/events/{id}")

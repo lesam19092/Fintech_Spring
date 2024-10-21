@@ -1,15 +1,15 @@
 package com.example.fintech_spring.service.event;
 
 
-import com.example.fintech_spring.dto.Event;
+import com.example.fintech_spring.dto.EventDto;
 
 public interface EventSerivce {
 
-    void save(Event event);
+    void save(EventDto eventDto);
 
-    Event findById(Integer id);
+    EventDto findById(Integer id);
 
     void deleteById(Integer id);
 
-    void update(Event event);
+    void update(Integer id, EventDto eventDto);
 }
