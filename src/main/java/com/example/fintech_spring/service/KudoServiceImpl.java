@@ -1,9 +1,9 @@
 package com.example.fintech_spring.service;
 
 
-import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Category;
 import com.example.fintech_spring.dto.Location;
+import com.example.fintech_spring.komanda.Inserter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -23,9 +22,7 @@ import java.util.UUID;
 public class KudoServiceImpl implements KudoService {
 
 
-    private final Repository<Integer, Category> categoryRepository;
-
-    private final Repository<UUID, Location> locationRepository;
+    private final Inserter inserter;
 
     private final RestTemplate restTemplate;
 
@@ -47,8 +44,9 @@ public class KudoServiceImpl implements KudoService {
                             HttpMethod.GET, null, new ParameterizedTypeReference<List<Category>>() {
                             });
             rateResponse.getBody()
-                    .forEach(category -> categoryRepository.save(category.getId(), category));
-            log.info("Successfully fetched and stored {} categories.", categoryRepository.getTotalCount());
+                    .forEach(inserter::insertCategory);
+
+            log.info("Successfully fetched and stored  categories.");
         } catch (Exception ex) {
             log.error("Error fetching categories:", ex);
         }
@@ -62,11 +60,8 @@ public class KudoServiceImpl implements KudoService {
                             HttpMethod.GET, null, new ParameterizedTypeReference<>() {
                             });
             rateResponse.getBody()
-                    .forEach(location -> {
-                        location.setUuid(UUID.randomUUID());
-                        locationRepository.save(location.getUuid(), location);
-                    });
-            log.info("Successfully fetched and stored {} locations.", locationRepository.getTotalCount());
+                    .forEach(inserter::insertLocation);
+            log.info("Successfully fetched and stored locations.");
         } catch (Exception ex) {
             log.error("Error fetching categories:", ex);
         }
