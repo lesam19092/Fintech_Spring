@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class DataSavingObserver implements DataObserver {
 
     @Override
-    public void onDataChange(String data) {
+    public void notifyInformation(String data) {
         log.info("Data has been saved: " + data);
     }
 }

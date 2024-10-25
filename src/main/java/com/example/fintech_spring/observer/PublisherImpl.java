@@ -24,7 +24,7 @@ public class PublisherImpl implements Publisher {
     @Override
     public void notifyObservers(String notification) {
         for (DataObserver observer : observers) {
-            observer.onDataChange(notification);
+            observer.notifyInformation(notification);
         }
     }
 }
