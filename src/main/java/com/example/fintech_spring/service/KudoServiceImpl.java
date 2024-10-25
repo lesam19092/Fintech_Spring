@@ -45,7 +45,6 @@ public class KudoServiceImpl implements KudoService {
                             });
             rateResponse.getBody()
                     .forEach(inserter::insertCategory);
-
             log.info("Successfully fetched and stored  categories.");
         } catch (Exception ex) {
             log.error("Error fetching categories:", ex);
