@@ -3,14 +3,13 @@ package com.example.fintech_spring.second_task.service;
 import com.example.fintech_spring.second_task.client.ApiClient;
 import com.example.fintech_spring.second_task.client.ReactiveClient;
 import com.example.fintech_spring.second_task.dto.Event;
+import com.example.fintech_spring.second_task.dto.EventRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -32,12 +31,19 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public List<Event> getSuitableEvents(Double budget, String currency, LocalDate dateFrom, LocalDate dateTo) throws ExecutionException, InterruptedException {
+    public List<Event> getSuitableEvents(EventRequest e) throws ExecutionException, InterruptedException {
         long startTime = System.currentTimeMillis();
         log.info("Starting to get events and convert budget...");
 
-        CompletableFuture<List<Event>> listOfEvents = CompletableFuture.supplyAsync(() -> apiClient.getEvents(dateFrom, dateTo), executorServiceForFetchingData);
-        CompletableFuture<Double> amountOfMoney = CompletableFuture.supplyAsync(() -> apiClient.getAmountInRub(budget, currency), executorServiceForFetchingData);
+        CompletableFuture<List<Event>> listOfEvents = CompletableFuture
+                .supplyAsync(()
+                                -> apiClient
+                                .getEvents(e.getDateFrom(), e.getDateTo()),
+                        executorServiceForFetchingData);
+        CompletableFuture<Double> amountOfMoney = CompletableFuture
+                .supplyAsync(()
+                        -> apiClient.
+                        getAmountInRub(e.getBudget(), e.getCurrency()), executorServiceForFetchingData);
 
         listOfEvents.thenAcceptBoth(amountOfMoney, (events, budgetInRub) -> {
             log.info("Filtering events based on budget: {}", budgetInRub);
@@ -45,8 +51,8 @@ public class EventServiceImpl implements EventService {
                 try {
                     double price = Double.parseDouble(event.getPrice());
                     return price > budgetInRub;
-                } catch (NumberFormatException e) {
-                    log.warn("Invalid price format for event: {}", event.getTitle(), e);
+                } catch (NumberFormatException ex) {
+                    log.warn("Invalid price format for event: {}", event.getTitle(), ex);
                     return true;
                 }
             });
@@ -57,8 +63,8 @@ public class EventServiceImpl implements EventService {
             amountOfMoney.get();
             long endTime = System.currentTimeMillis();
             log.debug("Completed in {} ms", (endTime - startTime));
-        } catch (InterruptedException | ExecutionException e) {
-            log.error("Error during data processing", e);
+        } catch (InterruptedException | ExecutionException ex) {
+            log.error("Error during data processing", ex);
         }
         return listOfEvents.get();
 
@@ -71,11 +77,11 @@ public class EventServiceImpl implements EventService {
 
     private final ReactiveClient reactiveClient;
 
-    public Mono<List<Event>> getSuitableEventsMono(Double budget, String currency, LocalDate dateFrom, LocalDate dateTo) {
+    public Mono<List<Event>> getSuitableEventsMono(EventRequest e) {
         long startTime = System.currentTimeMillis();
         log.info("Starting to get events and convert budget...");
-        Mono<List<Event>> eventsMono = reactiveClient.getEventsMono(dateFrom, dateTo);
-        Mono<Double> budgetInRubMono = reactiveClient.getAmountInRubMono(budget, currency);
+        Mono<List<Event>> eventsMono = reactiveClient.getEventsMono(e.getDateFrom(), e.getDateTo());
+        Mono<Double> budgetInRubMono = reactiveClient.getAmountInRubMono(e.getBudget(), e.getCurrency());
         return Mono.zip(eventsMono, budgetInRubMono)
                 .map(tuple -> {
                     List<Event> events = tuple.getT1();
@@ -86,8 +92,8 @@ public class EventServiceImpl implements EventService {
                                 try {
                                     double price = Double.parseDouble(event.getPrice());
                                     return price <= budgetInRub;
-                                } catch (NumberFormatException e) {
-                                    log.warn("Invalid price format for event: {}", event.getTitle(), e);
+                                } catch (NumberFormatException ex) {
+                                    log.warn("Invalid price format for event: {}", event.getTitle(), ex);
                                     return false;
                                 }
                             })
