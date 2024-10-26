@@ -1,6 +1,7 @@
 package com.example.fintech_spring.configuration;
 
 import lombok.Data;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,12 +19,16 @@ public class ExecutorConfiguration {
 
     @Bean
     ExecutorService executorServiceForFetchingData() {
-        return Executors.newFixedThreadPool(threadCount);
+        BasicThreadFactory factory = new BasicThreadFactory.Builder()
+                .namingPattern("MyCustomThreadForFetchingData-%d").priority(Thread.MAX_PRIORITY).build();
+        return Executors.newFixedThreadPool(threadCount, factory);
     }
 
 
     @Bean
     ScheduledExecutorService executorSheduled() {
-        return Executors.newScheduledThreadPool(threadCount);
+        BasicThreadFactory factory = new BasicThreadFactory.Builder()
+                .namingPattern("MyCustomThreadForScheduled-%d").priority(Thread.MAX_PRIORITY).build();
+        return Executors.newScheduledThreadPool(threadCount, factory);
     }
 }

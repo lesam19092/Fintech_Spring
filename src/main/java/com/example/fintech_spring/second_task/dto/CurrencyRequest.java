@@ -6,9 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class CurrencyRequest {
-
-
-
     private String fromCurrency;
 
     private final String toCurrency = "RUB";
