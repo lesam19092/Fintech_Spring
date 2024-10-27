@@ -1,7 +1,7 @@
 package com.example.fintech_spring.controllers;
 
-import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Category;
+import com.example.fintech_spring.service.CategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ class CategoriesControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private Repository<Integer, Category> categoryRepository;
+    private CategoryService categoryService;
     private static ObjectMapper mapper = new ObjectMapper();
 
 
@@ -37,7 +37,7 @@ class CategoriesControllerTest {
         categories.add(new Category(1, "slug1", "name1"));
         categories.add(new Category(2, "slug2", "name2"));
 
-        when(categoryRepository.findAll()).thenReturn(categories);
+        when(categoryService.findAll()).thenReturn(categories);
         mockMvc.perform(get("/api/v1/places/categories"))
                 .andExpect(status().isOk())
                 .andExpect(content()
@@ -55,7 +55,7 @@ class CategoriesControllerTest {
         String expectedJson = mapper
                 .writeValueAsString(new Category(1, "slug1", "name1"));
 
-        when(categoryRepository.findById(1)).thenReturn(Optional.of(category));
+        when(categoryService.findById(1)).thenReturn(Optional.of(category));
 
         mockMvc.perform(get("/api/v1/places/categories/{id}", 1))
                 .andExpect(status().isOk())
@@ -91,7 +91,7 @@ class CategoriesControllerTest {
     @Test
     void deleteCategory() throws Exception {
 
-        when(categoryRepository.deleteById(1)).thenReturn(true);
+        when(categoryService.deleteById(1)).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/v1/places/categories/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)

@@ -1,7 +1,7 @@
 package com.example.fintech_spring.controllers;
 
-import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Location;
+import com.example.fintech_spring.service.LocationSerivice;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class LocationsControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private Repository<UUID, Location> locationRepository;
+    private LocationSerivice locationSerivice;
     private static ObjectMapper mapper = new ObjectMapper();
 
 
@@ -42,7 +42,7 @@ class LocationsControllerTest {
         locations.add(new Location(UUID.randomUUID(), "slug1", "name1"));
         locations.add(new Location(UUID.randomUUID(), "slug2", "name2"));
 
-        when(locationRepository.findAll()).thenReturn(locations);
+        when(locationSerivice.findAll()).thenReturn(locations);
 
 
         mockMvc.perform(get("/api/v1/locations"))
@@ -64,7 +64,7 @@ class LocationsControllerTest {
         String expectedJson = mapper
                 .writeValueAsString(new Location(id, "slug1", "name1"));
 
-        when(locationRepository.findById(id)).thenReturn(Optional.of(location));
+        when(locationSerivice.findById(id)).thenReturn(Optional.of(location));
 
         mockMvc.perform(get("/api/v1/locations/{id}", id))
                 .andExpect(status().isOk())
@@ -106,7 +106,7 @@ class LocationsControllerTest {
     @Test
     void deleteLocation() throws Exception {
         var id = UUID.randomUUID();
-        when(locationRepository.deleteById(UUID.randomUUID())).thenReturn(true);
+        when(locationSerivice.deleteById(UUID.randomUUID())).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/v1/locations/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
