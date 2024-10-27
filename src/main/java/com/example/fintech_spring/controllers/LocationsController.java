@@ -16,7 +16,7 @@ public class LocationsController {
 
 
     @GetMapping("/locations/{id}")
-    public LocationDto getLocationById(@PathVariable Integer id) {
+    public LocationDto getLocationById(@PathVariable Long id) {
         return locationService.findById(id);
     }
 
@@ -28,12 +28,12 @@ public class LocationsController {
 
 
     @PutMapping("/locations/{id}")
-    public void updateLocation(@PathVariable Integer id, @RequestBody LocationDto locationDto) {
+    public void updateLocation(@PathVariable Long id, @RequestBody LocationDto locationDto) {
         locationService.update(id, locationDto);
     }
 
     @DeleteMapping("/locations/{id}")
-    public void deleteLocation(@PathVariable Integer id) {
+    public void deleteLocation(@PathVariable Long id) {
         locationService.deleteById(id);
     }
 }

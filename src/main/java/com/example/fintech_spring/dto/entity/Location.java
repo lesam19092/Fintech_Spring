@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -24,6 +25,6 @@ public class Location {
     private String name;
 
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Event> events = new LinkedHashSet<>();
+    private Set<Event> events = new HashSet<>();
 
 }

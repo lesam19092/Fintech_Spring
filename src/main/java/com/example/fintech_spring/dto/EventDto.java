@@ -18,5 +18,5 @@ public class EventDto {
     @Positive
     private Double price;
     @Positive
-    private Integer locationId;
+    private Long locationId;
 }

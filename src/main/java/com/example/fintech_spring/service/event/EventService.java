@@ -11,11 +11,11 @@ public interface EventService {
 
     void save(EventDto eventDto);
 
-    EventDto findById(Integer id);
+    EventDto findById(Long id);
 
-    void deleteById(Integer id);
+    void deleteById(Long id);
 
-    void update(Integer id, EventDto eventDto);
+    void update(Long id, EventDto eventDto);
 
     List<EventDto> findEventsByFilter(String title, String place, LocalDate dateFrom, LocalDate toDate);
 

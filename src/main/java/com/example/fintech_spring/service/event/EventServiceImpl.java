@@ -5,9 +5,9 @@ import com.example.fintech_spring.dto.entity.Event;
 import com.example.fintech_spring.repository.EventRepository;
 import com.example.fintech_spring.repository.LocationRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,31 +15,34 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final LocationRepository locationRepository;
 
     @Override
+    @Transactional
     public void save(EventDto eventDto) {
         eventRepository.save(getEventFromDto(eventDto));
     }
 
     @Override
-    public EventDto findById(Integer id) {
+    @Transactional(readOnly = true)
+    public EventDto findById(Long id) {
         Event event = eventRepository.findByIdWithLocations(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event with id " + id + " not found"));
         return convertToDto(event);
     }
 
     @Override
-    public void deleteById(Integer id) {
+    @Transactional
+    public void deleteById(Long id) {
         eventRepository.deleteById(id);
     }
 
     @Override
-    public void update(Integer id, EventDto eventDto) {
+    @Transactional
+    public void update(Long id, EventDto eventDto) {
         Event event = eventRepository.findByIdWithLocations(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event with id " + id + " not found"));
         updateEventFromDto(event, eventDto);
@@ -47,6 +50,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventDto> findEventsByFilter(String title, String place, LocalDate dateFrom, LocalDate toDate) {
         return eventRepository.findAll(EventRepository.buildSpecification(title, place, dateFrom, toDate))
                 .stream()
@@ -55,11 +59,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public void deleteAll() {
         eventRepository.deleteAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Event> findAll() {
         return eventRepository.findAll();
     }

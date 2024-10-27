@@ -8,11 +8,11 @@ import java.util.List;
 public interface LocationService {
     void save(LocationDto locationDto);
 
-    LocationDto findById(Integer id);
+    LocationDto findById(Long id);
 
-    void deleteById(Integer id);
+    void deleteById(Long id);
 
-    void update(Integer id, LocationDto locationDto);
+    void update(Long id, LocationDto locationDto);
 
     void deleteAll();
 

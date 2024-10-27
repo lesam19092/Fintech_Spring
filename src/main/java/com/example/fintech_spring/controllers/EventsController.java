@@ -17,7 +17,7 @@ public class EventsController {
     private final EventService eventService;
 
     @GetMapping("/events/{id}")
-    public EventDto getEventById(@PathVariable Integer id) {
+    public EventDto getEventById(@PathVariable Long id) {
         return eventService.findById(id);
     }
 
@@ -29,12 +29,12 @@ public class EventsController {
 
 
     @PutMapping("/events/{id}")
-    public void updateEvent(@PathVariable Integer id, @RequestBody EventDto eventDto) {
+    public void updateEvent(@PathVariable Long id, @RequestBody EventDto eventDto) {
         eventService.update(id, eventDto);
     }
 
     @DeleteMapping("/events/{id}")
-    public void deleteEvent(@PathVariable Integer id) {
+    public void deleteEvent(@PathVariable Long id) {
         eventService.deleteById(id);
     }
 

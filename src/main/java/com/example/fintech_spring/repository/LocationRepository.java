@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface LocationRepository extends JpaRepository<Location, Integer> {
+public interface LocationRepository extends JpaRepository<Location, Long> {
 
 
     @Query("SELECT l FROM Location l JOIN FETCH l.events WHERE l.id = :id")
-    Optional<Location> findByIdWithEvents(Integer id);
+    Optional<Location> findByIdWithEvents(Long id);
 }

@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public interface EventRepository extends JpaRepository<Event, Integer> {
+public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findAll(Specification<Event> specification);
 
     @Query("SELECT e FROM Event e JOIN FETCH e.location WHERE e.id = :id")
-    Optional<Event> findByIdWithLocations(Integer id);
+    Optional<Event> findByIdWithLocations(Long id);
 
     static Specification<Event> buildSpecification(String title, String place, LocalDate dateFrom, LocalDate toDate) {
         List<Specification<Event>> specifications = new ArrayList<>();

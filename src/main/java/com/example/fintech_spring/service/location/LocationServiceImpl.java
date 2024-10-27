@@ -5,16 +5,15 @@ import com.example.fintech_spring.dto.entity.Event;
 import com.example.fintech_spring.dto.entity.Location;
 import com.example.fintech_spring.repository.LocationRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class LocationServiceImpl implements LocationService {
 
 
@@ -26,7 +25,8 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public LocationDto findById(Integer id) {
+    @Transactional(readOnly = true)
+    public LocationDto findById(Long id) {
         Location location = locationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Location with id " + id + " not found"));
         return convertToDto(location);
@@ -34,12 +34,14 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    @Transactional
+    public void deleteById(Long id) {
         locationRepository.deleteById(id);
     }
 
     @Override
-    public void update(Integer id, LocationDto locationDto) {
+    @Transactional
+    public void update(Long id, LocationDto locationDto) {
         Location location = locationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Location with id " + id + " not found"));
         updateLocationFromDto(location, locationDto);
@@ -48,10 +50,12 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    @Transactional
     public void deleteAll() {
         locationRepository.deleteAll();
     }
 
+    @Transactional(readOnly = true)
     public List<Location> findAll() {
         return locationRepository.findAll();
     }
