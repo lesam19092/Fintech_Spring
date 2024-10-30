@@ -11,12 +11,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -47,7 +49,7 @@ class CategoriesControllerTest {
     }
 
     @Test
-    void getCategoryById() throws Exception {
+    void getCategoryById_AndCategoryExist() throws Exception {
 
 
         Category category = new Category(1, "slug1", "name1");
@@ -55,7 +57,7 @@ class CategoriesControllerTest {
         String expectedJson = mapper
                 .writeValueAsString(new Category(1, "slug1", "name1"));
 
-        when(categoryService.findById(1)).thenReturn(Optional.of(category));
+        when(categoryService.findById(1)).thenReturn(Optional.of(category).get());
 
         mockMvc.perform(get("/api/v1/places/categories/{id}", 1))
                 .andExpect(status().isOk())
@@ -67,7 +69,14 @@ class CategoriesControllerTest {
     }
 
     @Test
-    void createGategory() throws Exception {
+    void getCategoryById_AndCategoryNotExist() throws Exception {
+        when(categoryService.findById(1000)).thenThrow(new HttpRequestMethodNotSupportedException("категории нет в базе"));
+        mockMvc.perform(get("/api/v1/places/categories/{id}", 1000))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void createGategory_AndCreated() throws Exception {
         String expectedJson = mapper.writeValueAsString(new Category(1, "slug1", "name1"));
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/v1/places/categories")
@@ -77,8 +86,20 @@ class CategoriesControllerTest {
                 .andExpect(status().isCreated());
     }
 
+
     @Test
-    void updateCategory() throws Exception {
+    void createGategory_AndNotCreated() throws Exception {
+        String expectedJson = mapper.writeValueAsString("");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/v1/places/categories")
+                        .content(expectedJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void updateCategory_AndIsUpdated() throws Exception {
         String expectedJson = mapper.writeValueAsString(new Category(1, "slug1", "name1"));
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/api/v1/places/categories/{id}", 1)
@@ -88,8 +109,20 @@ class CategoriesControllerTest {
                 .andExpect(status().isOk());
     }
 
+
     @Test
-    void deleteCategory() throws Exception {
+    void updateCategory_AndNotUpdated() throws Exception {
+        String expectedJson = mapper.writeValueAsString("");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/v1/places/categories/{id}", 1)
+                        .content(expectedJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void deleteCategory_AndDeleted() throws Exception {
 
         when(categoryService.deleteById(1)).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders
@@ -98,6 +131,14 @@ class CategoriesControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
+    }
+
+    @Test
+    void deleteCategory_AndNotDeleted() throws Exception {
+        when(categoryService.deleteById(1)).thenReturn(false);
+        mockMvc.perform(delete("/api/v1/places/categories/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().string("false"));
 
     }
 }

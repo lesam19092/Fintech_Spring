@@ -4,6 +4,7 @@ import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Location;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +22,12 @@ public class LocationSerivice {
         locationRepository.save(id, location);
     }
 
-    public Optional<Location> findById(UUID id) {
-        return locationRepository.findById(id);
+    public Location findById(UUID id) throws HttpRequestMethodNotSupportedException {
+
+        if (locationRepository.findById(id).isEmpty()) {
+            throw new HttpRequestMethodNotSupportedException("локации нет в базе");
+        }
+        return locationRepository.findById(id).get();
     }
 
     public boolean deleteById(UUID id) {

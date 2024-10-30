@@ -6,10 +6,10 @@ import com.example.fintech_spring.service.LocationSerivice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -29,8 +29,8 @@ public class LocationsController {
 
 
     @GetMapping(value = "/locations/{id}")
-    public ResponseEntity<Optional<Location>> getLocationById(@PathVariable UUID id) {
-        Optional<Location> location = locationSerivice.findById(id);
+    public ResponseEntity<Location> getLocationById(@PathVariable UUID id) throws HttpRequestMethodNotSupportedException {
+        Location location = locationSerivice.findById(id);
         return new ResponseEntity<>(location, HttpStatus.OK);
     }
 

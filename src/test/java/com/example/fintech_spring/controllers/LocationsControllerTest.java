@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +19,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest(controllers = {LocationsController.class})
 class LocationsControllerTest {
@@ -54,17 +55,16 @@ class LocationsControllerTest {
     }
 
     @Test
-    void getLocationById() throws Exception {
+    void getLocationById_AndLocationExist() throws Exception {
 
 
         var id = UUID.randomUUID();
-
         Location location = new Location(id, "slug1", "name1");
 
         String expectedJson = mapper
                 .writeValueAsString(new Location(id, "slug1", "name1"));
 
-        when(locationSerivice.findById(id)).thenReturn(Optional.of(location));
+        when(locationSerivice.findById(id)).thenReturn(Optional.of(location).get());
 
         mockMvc.perform(get("/api/v1/locations/{id}", id))
                 .andExpect(status().isOk())
@@ -72,10 +72,20 @@ class LocationsControllerTest {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(expectedJson));
 
+
     }
 
     @Test
-    void createLocation() throws Exception {
+    void getLocationById_AndLocationNotExist() throws Exception {
+        var id = UUID.randomUUID();
+        when(locationSerivice.findById(id)).thenThrow(new HttpRequestMethodNotSupportedException("локации нет в базе"));
+        mockMvc.perform(get("/api/v1/locations/{id}", id))
+                .andExpect(status().is4xxClientError());
+    }
+
+
+    @Test
+    void createLocation_AndCreated() throws Exception {
 
         String expectedJson = mapper.writeValueAsString(new Location(UUID.randomUUID(), "slug1", "name1"));
 
@@ -88,8 +98,21 @@ class LocationsControllerTest {
                 .andExpect(status().isCreated());
     }
 
+
     @Test
-    void updateLocation() throws Exception {
+    void createLocation_AndNotCreated() throws Exception {
+        String expectedJson = mapper.writeValueAsString("");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/v1/locations")
+                        .content(expectedJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+    }
+
+
+    @Test
+    void updateLocation_AndIsUpdated() throws Exception {
 
         var id = UUID.randomUUID();
 
@@ -103,8 +126,21 @@ class LocationsControllerTest {
 
     }
 
+
     @Test
-    void deleteLocation() throws Exception {
+    void updateLocation_AndNotUpdated() throws Exception {
+
+        String expectedJson = mapper.writeValueAsString("");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/v1/locations/{id}", 0)
+                        .content(expectedJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void deleteLocation_AndDeleted() throws Exception {
         var id = UUID.randomUUID();
         when(locationSerivice.deleteById(UUID.randomUUID())).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders
@@ -112,6 +148,16 @@ class LocationsControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+
+    }
+
+    @Test
+    void deleteLocation_AndNotDeleted() throws Exception {
+        var id = UUID.randomUUID();
+        when(locationSerivice.deleteById(id)).thenReturn(false);
+        mockMvc.perform(delete("/api/v1/locations/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect(content().string("false"));
 
     }
 }

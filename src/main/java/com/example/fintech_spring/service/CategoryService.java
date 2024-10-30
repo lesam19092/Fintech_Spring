@@ -4,6 +4,7 @@ import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,8 +19,12 @@ public class CategoryService {
         categoryRepository.save(id, category);
     }
 
-    public Optional<Category> findById(Integer id) {
-        return categoryRepository.findById(id);
+    public Category findById(Integer id) throws HttpRequestMethodNotSupportedException {
+
+        if (categoryRepository.findById(id).isEmpty()) {
+            throw new HttpRequestMethodNotSupportedException("категории нет в базе");
+        }
+        return categoryRepository.findById(id).get();
     }
 
     public boolean deleteById(Integer id) {
