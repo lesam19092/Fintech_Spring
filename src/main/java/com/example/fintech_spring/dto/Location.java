@@ -12,8 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 public class Location implements Serializable {
-    private UUID uuid;
+    private int id;
     private String slug;
     private String name;
-
 }
