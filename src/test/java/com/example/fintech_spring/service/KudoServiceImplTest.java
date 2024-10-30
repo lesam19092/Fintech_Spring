@@ -52,4 +52,8 @@ class KudoServiceImplTest {
 
         assertThat(locations, hasSize(5));
     }
+
+
+
+
 }
