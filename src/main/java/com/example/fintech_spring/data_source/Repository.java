@@ -19,4 +19,6 @@ public interface Repository<K, V> {
     void update(K k, V v);
 
     int getTotalCount();
+
+    void clear();
 }

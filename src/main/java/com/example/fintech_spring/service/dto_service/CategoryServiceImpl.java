@@ -1,4 +1,4 @@
-package com.example.fintech_spring.service;
+package com.example.fintech_spring.service.dto_service;
 
 import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Category;
@@ -11,7 +11,8 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryService {
+public class CategoryServiceImpl implements CategoryService{
+
 
     private final Repository<Integer, Category> categoryRepository;
 

@@ -1,4 +1,4 @@
-package com.example.fintech_spring.service;
+package com.example.fintech_spring.service.dto_service;
 
 import com.example.fintech_spring.data_source.Repository;
 import com.example.fintech_spring.dto.Location;
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class LocationSerivice {
+public class LocationSeriviceImpl implements LocationService {
 
 
     private final Repository<UUID, Location> locationRepository;
