@@ -10,4 +10,5 @@ public class Hw7Application {
         SpringApplication.run(Hw7Application.class, args);
     }
 
+
 }

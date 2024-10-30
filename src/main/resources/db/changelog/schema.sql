@@ -15,4 +15,3 @@ CREATE TABLE Events
     location_id INT,
     FOREIGN KEY (location_id) REFERENCES Locations (id)
 )
-

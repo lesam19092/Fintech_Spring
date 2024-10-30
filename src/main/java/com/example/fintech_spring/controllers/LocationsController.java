@@ -1,16 +1,10 @@
 package com.example.fintech_spring.controllers;
 
 
-import com.example.fintech_spring.dto.Location;
-import com.example.fintech_spring.service.dto_service.LocationService;
+import com.example.fintech_spring.dto.LocationDto;
+import com.example.fintech_spring.service.location.LocationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 
 @RestController
@@ -18,40 +12,28 @@ import java.util.UUID;
 @RequestMapping("/api/v1")
 public class LocationsController {
 
-    private final LocationService locationSerivice;
+    private final LocationService locationService;
 
 
-    @GetMapping(value = "/locations")
-    public ResponseEntity<List<Location>> getAllLocations() {
-        List<Location> locations = locationSerivice.findAll();
-        return new ResponseEntity<>(locations, HttpStatus.OK);
+    @GetMapping("/locations/{id}")
+    public LocationDto getLocationById(@PathVariable Long id) {
+        return locationService.findById(id);
     }
 
 
-    @GetMapping(value = "/locations/{id}")
-    public ResponseEntity<Location> getLocationById(@PathVariable UUID id) throws HttpRequestMethodNotSupportedException {
-        Location location = locationSerivice.findById(id);
-        return new ResponseEntity<>(location, HttpStatus.OK);
+    @PostMapping("/locations")
+    public void createLocation(@RequestBody LocationDto locationDto) {
+        locationService.save(locationDto);
     }
 
 
-    @PostMapping(value = "/locations")
-    public ResponseEntity<Location> createLocation(@RequestBody Location location) {
-        locationSerivice.save(location.getUuid(), location);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PutMapping("/locations/{id}")
+    public void updateLocation(@PathVariable Long id, @RequestBody LocationDto locationDto) {
+        locationService.update(id, locationDto);
     }
 
-
-    @PutMapping(value = "/locations/{id}")
-    public ResponseEntity<?> updateLocation(@PathVariable UUID id, @RequestBody Location location) {
-        locationSerivice.update(id, location);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @DeleteMapping(value = "/locations/{id}")
-    public ResponseEntity<?> deleteLocation(@PathVariable UUID id) {
-        boolean deleted = locationSerivice.deleteById(id);
-        return new ResponseEntity<>(deleted, HttpStatus.OK);
+    @DeleteMapping("/locations/{id}")
+    public void deleteLocation(@PathVariable Long id) {
+        locationService.deleteById(id);
     }
 }
-
